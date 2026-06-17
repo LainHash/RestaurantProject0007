@@ -1,12 +1,11 @@
-﻿namespace Restaurant.Domain.Repositories
+namespace Restaurant.Domain.Repositories
 {
-    public interface IRepository<T> 
+    public interface IRepository<TEntity> where TEntity : class
     {
-        Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task AddAsync(T entity, CancellationToken cancellationToken = default);
-        void Update(T entity);
-        void Delete(T entity);
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<TEntity?> GetByIdAsync(Guid id);
+        Task<TEntity> AddAsync(TEntity entity);
+        void Update(TEntity entity);
+        void Delete(TEntity entity);
     }
 }
