@@ -17,4 +17,16 @@
     <ProjectReference Include="..\Restaurant.Domain\Restaurant.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
+    <Folder Include="Constants\Messages\" />
+    <Folder Include="Core\Result\Abstraction\" />
+    <Folder Include="Core\Result\Concrete\" />
+    <Folder Include="Features\Catalog\Categories\Commands\" />
+    <Folder Include="Features\Catalog\Categories\Validators\" />
+    <Folder Include="Features\Catalog\Categories\Queries\" />
+    <Folder Include="Messaging\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

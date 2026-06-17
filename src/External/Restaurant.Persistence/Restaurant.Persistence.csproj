@@ -28,4 +28,14 @@
     <ProjectReference Include="..\..\Core\Restaurant.Domain\Restaurant.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configurations\Catalog\" />
+    <Folder Include="Contexts\" />
+    <Folder Include="Data\" />
+    <Folder Include="Mapping\Catalog\" />
+    <Folder Include="Repositories\Catalog\" />
+    <Folder Include="Seeders\Catalog\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

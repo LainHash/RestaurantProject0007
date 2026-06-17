@@ -17,4 +17,9 @@
     <ProjectReference Include="..\..\Core\Restaurant.Application\Restaurant.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstraction\" />
+    <Folder Include="Concrete\" />
+  </ItemGroup>
+
 </Project>
