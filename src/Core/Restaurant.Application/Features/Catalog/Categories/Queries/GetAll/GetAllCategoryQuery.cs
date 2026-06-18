@@ -1,4 +1,4 @@
-using Restaurant.Application.Core.Result;
+using Restaurant.Application.Common.Result;
 using Restaurant.Application.Messaging;
 using Restaurant.Contracts.DTOs.Catalog;
 

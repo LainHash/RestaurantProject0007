@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Application.Core.Result
+﻿namespace Restaurant.Application.Common.Result
 {
     public class Result
     {

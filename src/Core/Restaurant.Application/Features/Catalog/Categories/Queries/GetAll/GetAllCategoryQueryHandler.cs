@@ -1,31 +1,23 @@
-using Restaurant.Application.Core.Result;
+using Restaurant.Application.Common.Result;
 using Restaurant.Application.Messaging;
+using Restaurant.Application.Services.Catalog;
 using Restaurant.Contracts.DTOs.Catalog;
-using Restaurant.Domain.Entities.Catalog;
-using Restaurant.Domain.Repositories;
 
 namespace Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 
 public class GetAllCategoryQueryHandler : IQueryHandler<GetAllCategoryQuery, DataResult<IEnumerable<CategoryResponse>>>
 {
-    private readonly IRepository<Category> _categoryRepository;
+    private readonly ICategoryService _categoryService;
 
-    public GetAllCategoryQueryHandler(IRepository<Category> categoryRepository)
+    public GetAllCategoryQueryHandler(ICategoryService categoryService)
     {
-        _categoryRepository = categoryRepository;
+        _categoryService = categoryService;
     }
 
     public async Task<DataResult<IEnumerable<CategoryResponse>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
     {
-        var categories = _categoryRepository.GetAllAsync()
-            .Select(c => new CategoryResponse
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Description = c.Description
-            })
-            .ToList();
+        var response = await _categoryService.GetCategoriesAsync(request, cancellationToken);
 
-        return new DataResult<IEnumerable<CategoryResponse>>(categories);
+        return response;
     }
 }

@@ -1,10 +1,10 @@
 using Restaurant.Domain.Repositories;
-using Restaurant.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Restaurant.Persistence.Contexts;
 
 namespace Restaurant.Persistence.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class 
     {
         private readonly RestaurantDbContext _context;
         private DbSet<TEntity> Entity;

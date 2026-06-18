@@ -1,4 +1,6 @@
-namespace Restaurant.Application.Core.Result
+using System.Net;
+
+namespace Restaurant.Application.Common.Result
 {
     public class DataResult<T> : Result
     {
@@ -8,7 +10,7 @@ namespace Restaurant.Application.Core.Result
         {
             Data = data;
             IsSucceed = true;
-            StatusCode = 200;
+            StatusCode = (int)HttpStatusCode.OK;
         }
 
         public DataResult(T data, string message) : this(data)
@@ -16,11 +18,11 @@ namespace Restaurant.Application.Core.Result
             Message = message;
         }
 
-        public DataResult(bool isSucceed, string message, int statusCode)
+        public DataResult(bool isSucceed, string message, HttpStatusCode statusCode)
         {
             IsSucceed = isSucceed;
             Message = message;
-            StatusCode = statusCode;
+            StatusCode = (int)statusCode;
         }
     }
 }

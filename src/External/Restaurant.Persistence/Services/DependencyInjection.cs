@@ -1,12 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Restaurant.Application.Services.Catalog;
 using Restaurant.Domain.Entities.Catalog;
 using Restaurant.Domain.Repositories;
 using Restaurant.Persistence.Contexts;
 using Restaurant.Persistence.Repositories;
+using Restaurant.Persistence.Repositories.Catalog;
 using Restaurant.Persistence.Seeders;
 using Restaurant.Persistence.Seeders.Catalog;
+using Restaurant.Persistence.Services.Catalog;
 
 namespace Restaurant.Persistence.Services
 {
@@ -39,6 +42,27 @@ namespace Restaurant.Persistence.Services
 
             // ── Repositories ─────────────────────────────────────────────────
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            var assembly = typeof(CategoryRepository).Assembly;
+
+            foreach (var type in assembly.GetTypes())
+            {
+                if (!type.IsClass || type.IsAbstract)
+                    continue;
+
+                if (!type.Name.EndsWith("Repository"))
+                    continue;
+
+                foreach (var iface in type.GetInterfaces())
+                {
+                    if (iface.Name.EndsWith("Repository"))
+                    {
+                        services.AddScoped(iface, type);
+                    }
+                }
+            }
+
+            services.AddScoped<ICategoryService, CategoryService>();
 
             return services;
         }

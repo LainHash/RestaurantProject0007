@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Restaurant.Presentation.Abstraction;
+namespace Restaurant.Presentation.Controllers.Abstraction;
 
 [ApiController]
 [Route("api/[controller]")]

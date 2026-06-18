@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Entities\Misc\" />
-    <Folder Include="Repositories\Catalog\" />
   </ItemGroup>
 
 </Project>
