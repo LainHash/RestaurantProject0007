@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Domain.Entities.Catalog;
 using Restaurant.Domain.Repositories;
-using Restaurant.Domain.Repositories.Catalog;
 using Restaurant.Persistence.Contexts;
 using Restaurant.Persistence.Repositories;
-using Restaurant.Persistence.Repositories.Catalog;
 using Restaurant.Persistence.Seeders;
 using Restaurant.Persistence.Seeders.Catalog;
 
@@ -27,14 +25,20 @@ namespace Restaurant.Persistence.Services
 
             // ── Seeders ──────────────────────────────────────────────────────
 
-            // Catalog seeders
-            services.AddScoped<CategorySeeder>();
+            // Orchestrator seeder
             services.AddScoped<DatabaseSeeder>();
 
+            // Auto-register all IDataSeeder implementations
+            var seederTypes = typeof(DependencyInjection).Assembly.GetTypes()
+                .Where(t => typeof(IDataSeeder).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+            foreach (var type in seederTypes)
+            {
+                services.AddScoped(type);
+            }
+
             // ── Repositories ─────────────────────────────────────────────────
-            // ── Repositories ─────────────────────────────────────────────────
-            services.AddScoped<IRepository<object>, Repository<object, RestaurantDbContext>>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
             return services;
         }

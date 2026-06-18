@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.Persistence.Repositories
 {
-    public class Repository<TEntity, TContext> : IRepository<TEntity> where TEntity : class where TContext : DbContext
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly RestaurantDbContext _context;
         private DbSet<TEntity> Entity;
@@ -15,9 +15,9 @@ namespace Restaurant.Persistence.Repositories
             Entity = _context.Set<TEntity>();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public IQueryable<TEntity> GetAllAsync()
         {
-            return await Entity.ToListAsync();
+            return Entity.AsNoTracking().AsQueryable();
         }
 
         public async Task<TEntity?> GetByIdAsync(Guid id)

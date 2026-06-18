@@ -32,6 +32,8 @@
   <ItemGroup>
     <Folder Include="Configurations\Catalog\" />
     <Folder Include="Mapping\Catalog\" />
+    <Folder Include="Repositories\Catalog\" />
+    <Folder Include="Services\Catalog\" />
   </ItemGroup>
 
   <ItemGroup>

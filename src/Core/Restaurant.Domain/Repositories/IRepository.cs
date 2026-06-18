@@ -2,7 +2,7 @@ namespace Restaurant.Domain.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        IQueryable<TEntity> GetAllAsync();
         Task<TEntity?> GetByIdAsync(Guid id);
         Task<TEntity> AddAsync(TEntity entity);
         void Update(TEntity entity);
