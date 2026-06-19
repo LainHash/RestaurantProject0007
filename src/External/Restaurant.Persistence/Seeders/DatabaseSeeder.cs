@@ -20,6 +20,10 @@ namespace Restaurant.Persistence.Seeders
 
             // Catalog seeding: Categories first (FK dependency)
             await SeedAsync<CategorySeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Catalog.ProductSeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Inventory.ProductStockSeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Misc.ImageSeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Misc.ProductImageSeeder>(_context);
         }
 
         private async Task SeedAsync<TSeeder>(RestaurantDbContext context) where TSeeder : IDataSeeder
