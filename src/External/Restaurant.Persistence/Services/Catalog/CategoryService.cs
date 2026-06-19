@@ -39,6 +39,12 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<DataResult<CategoryResponse>>
             CreateCategoryAsync(CreateCategoryRequest request, CancellationToken cancellationToken = default)
         {
+            if(await _categoryRepository.IsNameUniqueAsync(request.Name, cancellationToken))
+            {
+                return DataResult<CategoryResponse>
+                    .Fail(Messages<Category>.AddError, HttpStatusCode.Conflict);
+            }
+            
             var category = _mapper.Map<Category>(request);
 
             await _categoryRepository.AddAsync(category);
@@ -50,8 +56,14 @@ namespace Restaurant.Persistence.Services.Catalog
 
         public async Task<DataResult<CategoryResponse>> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken = default)
         {
+            if (await _categoryRepository.IsNameUniqueAsync(request.Name, cancellationToken, id))
+            {
+                return DataResult<CategoryResponse>
+                    .Fail(Messages<Category>.UpdateError, HttpStatusCode.Conflict);
+            }
+
             var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
-            if (category == null)
+            if (category is null)
             {
                 return DataResult<CategoryResponse>
                     .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
@@ -69,7 +81,7 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<Result> DeleteCategoryAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
-            if (category == null)
+            if (category is null)
             {
                 return Result
                     .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
@@ -87,7 +99,7 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<Result> RestoreCategoryAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
-            if (category == null)
+            if (category is null)
             {
                 return Result
                     .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);

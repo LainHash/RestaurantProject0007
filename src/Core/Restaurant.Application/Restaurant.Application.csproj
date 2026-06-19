@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
+    <Folder Include="Common\Extensions\" />
     <Folder Include="Features\Catalog\Categories\Validators\" />
   </ItemGroup>
 
