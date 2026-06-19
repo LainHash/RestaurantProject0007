@@ -4,8 +4,7 @@ namespace Restaurant.Domain.Entities.Misc
 {
     public class Image : AuditableEntity
     {
-        public string FileName { get; set; } = null!;      // product-1.jpg
-        public string OriginalName { get; set; } = null!;  // iphone.jpg
+        public string AltText { get; set; } = null!;
 
         public string Url { get; set; } = null!;           // URL truy cập ảnh
         public string StoragePath { get; set; } = null!;   // đường dẫn vật lý hoặc cloud

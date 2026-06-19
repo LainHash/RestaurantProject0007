@@ -11,43 +11,53 @@ namespace Restaurant.Persistence.Seeders.Catalog
             if (await context.Products.AnyAsync())
                 return;
 
-            // Get categories to assign products to them
-            var categories = await context.Categories.ToListAsync();
-            if (!categories.Any()) return;
+            var csvPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Data", "products.csv");
 
-            var appetizerCat = categories.FirstOrDefault(c => c.Name == "Appetizer") ?? categories.First();
-            var mainCourseCat = categories.FirstOrDefault(c => c.Name == "Main Course") ?? categories.First();
+            if (!File.Exists(csvPath))
+                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
 
-            var products = new List<Product>
+            using var reader = new StreamReader(csvPath);
+            using var csv = new CsvHelper.CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
             {
-                new Product
-                {
-                    Id = Guid.Parse("10000000-0000-0000-0000-000000000001"),
-                    Name = "Spring Rolls",
-                    Description = "Delicious crispy spring rolls",
-                    IsAvailable = true,
-                    IsMadeToOrder = false,
-                    CategoryId = appetizerCat.Id
-                },
-                new Product
-                {
-                    Id = Guid.Parse("10000000-0000-0000-0000-000000000002"),
-                    Name = "Pho Beef",
-                    Description = "Traditional Vietnamese beef noodle soup",
-                    IsAvailable = true,
-                    IsMadeToOrder = true,
-                    CategoryId = mainCourseCat.Id
-                }
-            };
+                HasHeaderRecord = true,
+                MissingFieldFound = null,
+            });
+
+            var records = csv.GetRecords<ProductCsvRecord>().ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
             {
                 using var transaction = await context.Database.BeginTransactionAsync();
-                context.Products.AddRange(products);
+
+                foreach (var record in records)
+                {
+                    context.Products.Add(new Product
+                    {
+                        Id = record.Id,
+                        Name = record.Name,
+                        Description = record.Description ?? string.Empty,
+                        IsAvailable = record.IsAvailable,
+                        CategoryId = record.CategoryId,
+                        IsMadeToOrder = record.IsMadeToOrder
+                    });
+                }
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
             });
+        }
+
+        private class ProductCsvRecord
+        {
+            public Guid Id { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public string? Description { get; set; }
+            public bool IsAvailable { get; set; }
+            public Guid CategoryId { get; set; }
+            public bool IsMadeToOrder { get; set; }
         }
     }
 }

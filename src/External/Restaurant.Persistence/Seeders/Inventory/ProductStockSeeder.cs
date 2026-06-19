@@ -11,31 +11,51 @@ namespace Restaurant.Persistence.Seeders.Inventory
             if (await context.ProductStocks.AnyAsync())
                 return;
 
-            var products = await context.Products.ToListAsync();
-            if (!products.Any()) return;
+            var csvPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Data", "product_stocks.csv");
 
-            var stocks = new List<ProductStock>();
+            if (!File.Exists(csvPath))
+                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
 
-            foreach (var product in products)
+            using var reader = new StreamReader(csvPath);
+            using var csv = new CsvHelper.CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
             {
-                stocks.Add(new ProductStock
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = product.Id,
-                    UnitPrice = 10.0m,
-                    StockQuantity = 100m,
-                    Unit = "Portion"
-                });
-            }
+                HasHeaderRecord = true,
+                MissingFieldFound = null,
+            });
+
+            var records = csv.GetRecords<ProductStockCsvRecord>().ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
             {
                 using var transaction = await context.Database.BeginTransactionAsync();
-                context.ProductStocks.AddRange(stocks);
+
+                foreach (var record in records)
+                {
+                    context.ProductStocks.Add(new ProductStock
+                    {
+                        Id = record.Id,
+                        ProductId = record.ProductId,
+                        UnitPrice = record.Price,
+                        Unit = record.Unit ?? string.Empty,
+                        StockQuantity = record.Quantity
+                    });
+                }
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
             });
+        }
+
+        private class ProductStockCsvRecord
+        {
+            public Guid Id { get; set; }
+            public Guid ProductId { get; set; }
+            public decimal Price { get; set; }
+            public string? Unit { get; set; }
+            public decimal Quantity { get; set; }
         }
     }
 }

@@ -11,40 +11,54 @@ namespace Restaurant.Persistence.Seeders.Misc
             if (await context.Images.AnyAsync())
                 return;
 
-            var images = new List<Image>
+            var csvPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Data", "images.csv");
+
+            if (!File.Exists(csvPath))
+                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
+
+            using var reader = new StreamReader(csvPath);
+            using var csv = new CsvHelper.CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
             {
-                new Image
-                {
-                    Id = Guid.Parse("20000000-0000-0000-0000-000000000001"),
-                    FileName = "spring-rolls.jpg",
-                    OriginalName = "spring-rolls-orig.jpg",
-                    Url = "/images/spring-rolls.jpg",
-                    StoragePath = "local/images/spring-rolls.jpg",
-                    FileSize = 102400,
-                    ContentType = "image/jpeg",
-                    IsPrimary = true
-                },
-                new Image
-                {
-                    Id = Guid.Parse("20000000-0000-0000-0000-000000000002"),
-                    FileName = "pho-beef.jpg",
-                    OriginalName = "pho-beef-orig.jpg",
-                    Url = "/images/pho-beef.jpg",
-                    StoragePath = "local/images/pho-beef.jpg",
-                    FileSize = 204800,
-                    ContentType = "image/jpeg",
-                    IsPrimary = true
-                }
-            };
+                HasHeaderRecord = true,
+                MissingFieldFound = null,
+            });
+
+            var records = csv.GetRecords<ImageCsvRecord>().ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
             {
                 using var transaction = await context.Database.BeginTransactionAsync();
-                context.Images.AddRange(images);
+
+                foreach (var record in records)
+                {
+                    context.Images.Add(new Image
+                    {
+                        Id = record.Id,
+                        AltText = record.AltText ?? string.Empty,
+                        ContentType = record.ContentType ?? string.Empty,
+                        IsPrimary = record.IsPrimary,
+                        Url = record.Url ?? string.Empty,
+                        StoragePath = record.StoragePath ?? string.Empty,
+                        FileSize = 0
+                    });
+                }
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
             });
+        }
+
+        private class ImageCsvRecord
+        {
+            public Guid Id { get; set; }
+            public string? AltText { get; set; }
+            public string? ContentType { get; set; }
+            public bool IsPrimary { get; set; }
+            public string? Url { get; set; }
+            public string? StoragePath { get; set; }
         }
     }
 }

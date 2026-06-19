@@ -11,51 +11,50 @@ namespace Restaurant.Persistence.Seeders.Misc
             if (await context.ProductImages.AnyAsync())
                 return;
 
-            var products = await context.Products.ToListAsync();
-            var images = await context.Images.ToListAsync();
+            var csvPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "Data", "product_images.csv");
 
-            if (!products.Any() || !images.Any()) return;
+            if (!File.Exists(csvPath))
+                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
 
-            var productImages = new List<ProductImage>();
-
-            // Assign Image 1 to Product 1
-            if (products.Count > 0 && images.Count > 0)
+            using var reader = new StreamReader(csvPath);
+            using var csv = new CsvHelper.CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
             {
-                productImages.Add(new ProductImage
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = products[0].Id,
-                    ImageId = images[0].Id,
-                    Url = images[0].Url,
-                    IsPrimary = true,
-                    DisplayOrder = 1
-                });
-            }
+                HasHeaderRecord = true,
+                MissingFieldFound = null,
+            });
 
-            // Assign Image 2 to Product 2
-            if (products.Count > 1 && images.Count > 1)
-            {
-                productImages.Add(new ProductImage
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = products[1].Id,
-                    ImageId = images[1].Id,
-                    Url = images[1].Url,
-                    IsPrimary = true,
-                    DisplayOrder = 1
-                });
-            }
-
-            if (!productImages.Any()) return;
+            var records = csv.GetRecords<ProductImageCsvRecord>().ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
             {
                 using var transaction = await context.Database.BeginTransactionAsync();
-                context.ProductImages.AddRange(productImages);
+
+                foreach (var record in records)
+                {
+                    context.ProductImages.Add(new ProductImage
+                    {
+                        Id = record.Id,
+                        ProductId = record.ProductId,
+                        ImageId = record.ImageId,
+                        DisplayOrder = record.DisplayOrder
+                    });
+                }
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
             });
+        }
+
+        private class ProductImageCsvRecord
+        {
+            public Guid Id { get; set; }
+            public Guid ProductId { get; set; }
+            public Guid ImageId { get; set; }
+            public bool IsPrimary { get; set; }
+            public int DisplayOrder { get; set; }
         }
     }
 }

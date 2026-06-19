@@ -9,7 +9,6 @@ namespace Restaurant.Persistence.Configurations.Misc
         public void Configure(EntityTypeBuilder<ProductImage> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Url).IsRequired().HasMaxLength(500);
 
             builder.HasOne(x => x.Image)
                    .WithMany(x => x.ProductImages)

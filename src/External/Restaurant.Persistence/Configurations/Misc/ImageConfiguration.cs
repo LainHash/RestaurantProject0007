@@ -9,8 +9,7 @@ namespace Restaurant.Persistence.Configurations.Misc
         public void Configure(EntityTypeBuilder<Image> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.FileName).IsRequired().HasMaxLength(255);
-            builder.Property(x => x.OriginalName).IsRequired().HasMaxLength(255);
+            builder.Property(x => x.AltText).HasMaxLength(255);
             builder.Property(x => x.Url).IsRequired().HasMaxLength(500);
             builder.Property(x => x.StoragePath).IsRequired().HasMaxLength(500);
             builder.Property(x => x.ContentType).IsRequired().HasMaxLength(100);

@@ -5,9 +5,6 @@ namespace Restaurant.Domain.Entities.Misc
 {
     public class ProductImage : Entity
     {
-        public string Url { get; set; } = null!;
-        public bool IsPrimary { get; set; }
-
         public int DisplayOrder { get; set; }
 
         public Guid ProductId { get; set; }
