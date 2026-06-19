@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace Restaurant.Application.Common.Result
+namespace Restaurant.Application.Common.Models.Result
 {
     public class DataResult<T> : Result
     {
@@ -16,6 +16,13 @@ namespace Restaurant.Application.Common.Result
         public DataResult(T data, string message) : this(data)
         {
             Message = message;
+        }
+
+        public DataResult(T data, bool isSucceed, string message, HttpStatusCode statusCode) : this(data)
+        {
+            IsSucceed = isSucceed;
+            Message = message;
+            StatusCode = (int)statusCode;
         }
 
         public DataResult(bool isSucceed, string message, HttpStatusCode statusCode)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Restaurant.Application.Common.Result;
+using Restaurant.Application.Common.Enums;
+using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 using Restaurant.Application.Services.Catalog;
 using Restaurant.Contracts.DTOs.Catalog;
@@ -17,17 +18,46 @@ namespace Restaurant.Persistence.Services.Catalog
             _mapper = mapper;
         }
 
-        public async Task<DataResult<IEnumerable<CategoryResponse>>> GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
+        public async Task<PageResult<IEnumerable<CategoryResponse>>> GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
         {
-            var categories = _categoryRepository.GetAllAsync()
-            .Select(c => new CategoryResponse
+            var query = _categoryRepository.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(request.Keyword))
             {
-                Id = c.Id,
-                Name = c.Name,
-                Description = c.Description
-            })
-            .ToList();
-            return new DataResult<IEnumerable<CategoryResponse>>(categories);
+                query = query.Where(c => c.Name.ToLower().Contains(request.Keyword.ToLower()));
+            }
+
+            switch (request.SortBy)
+            {
+                case nameof(SortType.CreatedAtAsc):
+                    query = query.OrderBy(p => p.CreatedAt);
+                    break;
+                case nameof(SortType.NameAsc):
+                    query = query.OrderBy(p => p.Name);
+                    break;
+                case nameof(SortType.NameDesc):
+                    query = query.OrderByDescending(p => p.Name);
+                    break;
+                default:
+                    query = query.OrderByDescending(p => p.CreatedAt);
+                    break;
+            }
+
+            var totalItems = query.Count();
+            var totalPages = (int)Math.Ceiling((decimal)totalItems / request.PageSize);
+
+            var categories = query
+                .Skip((request.Page - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .Select(c => new CategoryResponse
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description
+                })
+                .ToList();
+
+            return new PageResult<IEnumerable<CategoryResponse>>(categories, totalItems, totalPages, request.Page, request.PageSize);
         }
     }
 }
