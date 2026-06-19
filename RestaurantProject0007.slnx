@@ -8,5 +8,8 @@
     <Project Path="src/External/Restaurant.Persistence/Restaurant.Persistence.csproj" />
     <Project Path="src/External/Restaurant.Presentation/Restaurant.Presentation.csproj" />
   </Folder>
+  <Folder Name="/Shared/">
+    <Project Path="src/Shared/Restaurant.Contracts/Restaurant.Contracts.csproj" />
+  </Folder>
   <Project Path="src/Restaurant.API/Restaurant.API.csproj" />
 </Solution>

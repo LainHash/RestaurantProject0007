@@ -10,23 +10,17 @@
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MediatR" Version="14.1.0" />
-    <PackageReference Include="Pagination" Version="3.0.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Restaurant.Domain\Restaurant.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Restaurant.Contracts\Restaurant.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
-    <Folder Include="Constants\Messages\" />
-    <Folder Include="Core\Result\Abstraction\" />
-    <Folder Include="Core\Result\Concrete\" />
-    <Folder Include="Features\Catalog\Categories\Commands\" />
+    <Folder Include="Common\Extensions\" />
     <Folder Include="Features\Catalog\Categories\Validators\" />
-    <Folder Include="Features\Catalog\Categories\Queries\" />
-    <Folder Include="Messaging\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

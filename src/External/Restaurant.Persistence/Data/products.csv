@@ -1,0 +1,31 @@
+﻿Id,Name,Description,IsAvailable,CategoryId,IsMadeToOrder
+019ede84-e381-7a14-8f97-8d20259db08d,Phở Bò,Phở bò truyền thống nấu từ xương bò hầm 12 tiếng với các loại gia vị đặc trưng,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7645-ba3d-6cfdf952d255,Phở Gà,Phở gà nước trong thanh ngọt với thịt gà ta tươi ngon,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7ee3-9db7-83168994d676,Bún Bò Huế,Bún bò Huế cay nồng đặc trưng miền Trung với chả cua và giò heo,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7851-92c3-89d6a6080b20,Bún Riêu,Bún riêu cua đồng nấu cà chua thơm ngon,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7fc1-8962-7744ab2d06fa,Cơm Tấm Sườn Bì Chả,Cơm tấm sườn bì chả đặc sản Sài Gòn,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7b7d-8fdc-da4dfd291426,Canh Chua Cá,Cá nấu canh chua kiểu miền Nam với me và rau thơm,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-74a0-9786-25618ec45ea4,Gà Rang Muối,Gà rang muối giòn tan vàng đẹp,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-75b5-b511-9ee0678801a7,Bò Lúc Lắc,Bò lúc lắc xào bơ tỏi mềm ngon,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7791-8c9e-fa92f350af4a,Sườn Xào Chua Ngọt,Sườn xào chua ngọt kiểu Việt,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-7b7b-a503-6a9f132eff28,Cá Chiên Sốt Cà Chua,Cá chiên sốt cà chua đậm đà,TRUE,5e216498-ca2f-4e42-a00b-c54bf29a0c8b,TRUE
+019ede84-e381-78fa-afa7-1ec018a0bc2d,Chả Giò,Chả giò nhân thịt tôm giòn rụm,TRUE,77a77046-b5cb-4cbd-a9f2-f7db3c8e1a47,FALSE
+019ede84-e381-7e1b-9a52-5e6ee1f1af03,Gói Cuốn,Gỏi cuốn tôm thịt tươi mát với rau sống,TRUE,77a77046-b5cb-4cbd-a9f2-f7db3c8e1a47,TRUE
+019ede84-e381-73f4-aba0-2565b7820702,Bánh Mì Thịt,Bánh mì thịt nguội pâté trứng,TRUE,77a77046-b5cb-4cbd-a9f2-f7db3c8e1a47,TRUE
+019ede84-e381-77a2-820c-c8390fc1fdc4,Nem Nướng,Nem nướng cuộn rau sống chấm mắm nêm,TRUE,77a77046-b5cb-4cbd-a9f2-f7db3c8e1a47,TRUE
+019ede84-e381-7baa-885a-5fc98467e754,Bánh Bao,Bánh bao nhân thịt trứng,TRUE,77a77046-b5cb-4cbd-a9f2-f7db3c8e1a47,TRUE
+019ede84-e381-72c4-b5bf-6a465cbeef80,Sinh Tố Bơ,Sinh tố bơ béo ngậy kem sữa,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-7819-b6da-03de5f6fa7ca,Sinh Tố Xoài,Sinh tố xoài thơm ngon vị nhiệt đới,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-7829-bf85-95a9f9a031d8,Trà Sữa Trân Châu,Trà sữa trân châu đen đường nâu,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-72f6-a4bc-9fdd26e95017,Nước Cam Ép,Nước cam ép nguyên chất tươi mát,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-7097-817a-46e7a5725bad,Cà Phê Sữa Đá,Cà phê sữa đá truyền thống Việt Nam,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-7496-bd47-eb697398f81e,Bia Larue,Bia Larue lon 330ml mát lạnh,TRUE,ba578166-e0aa-40e6-ae2b-79d5cae413b9,FALSE
+019ede84-e381-7847-b4bd-2495cea153ea,Bia Tiger,Bia Tiger lon 330ml,TRUE,ba578166-e0aa-40e6-ae2b-79d5cae413b9,FALSE
+019ede84-e381-70c3-8086-07bc7bca29a2,Rượu Vang Đỏ,Rượu vang đỏ nhập khẩu,TRUE,ba578166-e0aa-40e6-ae2b-79d5cae413b9,FALSE
+019ede84-e381-7247-ac03-9e255799ace4,Bánh Flan,Bánh flan caramel mềm mịn,TRUE,0a0e87b7-e338-4bb9-834c-e9f515b7f5b4,FALSE
+019ede84-e381-79f1-a2c2-260a3026a842,Chè Ba Màu,Chè ba màu đặc sản Nam Bộ,TRUE,0a0e87b7-e338-4bb9-834c-e9f515b7f5b4,TRUE
+019ede84-e381-7fa7-8392-6d0f7de2f63a,Bánh Tart Trứng,Bánh tart trứng vỏ giòn nhân mềm,TRUE,0a0e87b7-e338-4bb9-834c-e9f515b7f5b4,TRUE
+019ede84-e381-7e2e-8e81-073f9848d33e,Sữa Chua Dẻo,Sữa chua dẻo mát lạnh thơm ngon,TRUE,0a0e87b7-e338-4bb9-834c-e9f515b7f5b4,FALSE
+019ede84-e381-755a-8349-64d07e821d76,Rau Muống Xào Tỏi,Rau muống xào tỏi giòn thơm,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-7e45-b421-85255335eae6,Đậu Hũ Sốt Cà,Đậu hũ sốt cà chua chay thanh đạm,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
+019ede84-e381-70eb-b1e8-e0ad68afa08e,Canh Khổ Qua Chay,Canh khổ qua chay nhồi nấm đông cô,TRUE,a98fe5d3-b9c8-4a4a-a672-6c330ec41f56,TRUE
