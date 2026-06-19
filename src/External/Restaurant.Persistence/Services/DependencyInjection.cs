@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Restaurant.Application.Services;
 using Restaurant.Application.Services.Catalog;
 using Restaurant.Domain.Repositories;
 using Restaurant.Persistence.Contexts;
@@ -63,7 +64,11 @@ namespace Restaurant.Persistence.Services
             // ── AutoMapper ───────────────────────────────────────────────────
             services.AddAutoMapper(cfg => cfg.AddMaps(typeof(DependencyInjection).Assembly));
 
+
+            // ── Service ──────────────────────────────────────────────────────
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

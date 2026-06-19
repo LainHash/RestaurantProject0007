@@ -7,7 +7,7 @@ using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 using Restaurant.Contracts.DTOs.Catalog.Categories;
 using Restaurant.Presentation.Controllers.Abstraction;
 
-namespace Restaurant.Presentation.Controllers.Concrete;
+namespace Restaurant.Presentation.Controllers.Concrete.Catalog;
 
 public class CategoriesController : ApiController
 {

@@ -7,7 +7,7 @@ namespace Restaurant.Domain.Entities.Catalog
     public class Product : SoftDeleteEntity
     {
         public string Name { get; set; } = string.Empty;
-        public string? Description {  get; set; }
+        public string? Description { get; set; }
         public bool IsMadeToOrder { get; set; }
         public bool IsAvailable { get; set; }
 
@@ -16,5 +16,19 @@ namespace Restaurant.Domain.Entities.Catalog
         public virtual Category Category { get; set; } = null!;
         public virtual ProductStock ProductStock { get; set; } = null!;
         public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+
+        public Product() { }
+
+        public void Delete()
+        {
+            IsDeleted = true;
+            DeletedAt = DateTime.UtcNow;
+        }
+
+        public void Restore()
+        {
+            IsDeleted = false;
+            DeletedAt = null;
+        }
     }
 }
