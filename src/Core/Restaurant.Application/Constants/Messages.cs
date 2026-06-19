@@ -11,5 +11,7 @@
         public static string UpdateSuccess => $"{typeof(TEntity).Name} updated successfully.";
 
         public static string NotFound => $"{typeof(TEntity).Name} not found.";
+        public static string DeleteSuccess => $"{typeof(TEntity).Name} deleted successfully.";
+        public static string RestoreSuccess => $"{typeof(TEntity).Name} restore successfully.";
     }
 }

@@ -48,9 +48,9 @@ namespace Restaurant.Persistence.Services.Catalog
                 .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.AddSuccess, HttpStatusCode.Created);
         }
 
-        public async Task<DataResult<CategoryResponse>> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellation = default)
+        public async Task<DataResult<CategoryResponse>> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken = default)
         {
-            var category = await _categoryRepository.GetByIdAsync(id, cancellation);
+            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
             if (category == null)
             {
                 return DataResult<CategoryResponse>
@@ -60,10 +60,46 @@ namespace Restaurant.Persistence.Services.Catalog
             _mapper.Map(request, category);
 
             _categoryRepository.Update(category);
-            await _categoryRepository.SaveChangesAsync(cancellation);
+            await _categoryRepository.SaveChangesAsync(cancellationToken);
 
             return DataResult<CategoryResponse>
                 .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.UpdateSuccess, HttpStatusCode.OK);
+        }
+
+        public async Task<Result> DeleteCategoryAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+            if (category == null)
+            {
+                return Result
+                    .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            category.Delete();
+
+            _categoryRepository.Update(category);
+            await _categoryRepository.SaveChangesAsync(cancellationToken);
+
+            return Result
+                .Success(Messages<Category>.DeleteSuccess, HttpStatusCode.OK);
+        }
+
+        public async Task<Result> RestoreCategoryAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+            if (category == null)
+            {
+                return Result
+                    .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            category.Restore();
+
+            _categoryRepository.Update(category);
+            await _categoryRepository.SaveChangesAsync(cancellationToken);
+
+            return Result
+                .Success(Messages<Category>.RestoreSuccess, HttpStatusCode.OK);
         }
 
         private IQueryable<Category> Filtering(IQueryable<Category> query, GetAllCategoryQuery request)
@@ -103,6 +139,6 @@ namespace Restaurant.Persistence.Services.Catalog
             return query;
         }
 
-
+        
     }
 }
