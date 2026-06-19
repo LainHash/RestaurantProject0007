@@ -14,5 +14,7 @@ namespace Restaurant.Domain.Entities.Misc
         public string ContentType { get; set; } = null!;   // image/jpeg
 
         public bool IsPrimary { get; set; }
+
+        public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }
 }
