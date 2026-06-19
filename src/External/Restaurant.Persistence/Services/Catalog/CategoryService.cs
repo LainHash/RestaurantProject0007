@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Restaurant.Application.Common.Enums;
 using Restaurant.Application.Common.Models.Result;
+using Restaurant.Application.Constants;
 using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 using Restaurant.Application.Services.Catalog;
-using Restaurant.Contracts.DTOs.Catalog;
+using Restaurant.Contracts.DTOs.Catalog.Categories;
+using Restaurant.Domain.Entities.Catalog;
 using Restaurant.Domain.Repositories.Catalog;
+using System.Net;
 
 namespace Restaurant.Persistence.Services.Catalog
 {
@@ -18,13 +21,38 @@ namespace Restaurant.Persistence.Services.Catalog
             _mapper = mapper;
         }
 
-        public async Task<PageResult<IEnumerable<CategoryResponse>>> GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
+        public async Task<PageResult<IEnumerable<CategoryResponse>>> 
+            GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
         {
             var query = _categoryRepository.GetAllAsync();
 
+            query = Filtering(query, request);
+
+            query = Paginating(query, request, out int totalItems);
+
+            var categories = _mapper.Map<List<CategoryResponse>>(query.ToList());
+
+            return PageResult<IEnumerable<CategoryResponse>>
+                .Success(categories, totalItems, request.Page, request.PageSize, Messages<Category>.GetAllSuccess);
+        }
+
+        public async Task<DataResult<CategoryResponse>> 
+            CreateCategoryAsync(CreateCategoryRequest request, CancellationToken cancellationToken = default)
+        {
+            var category = _mapper.Map<Category>(request);
+
+            await _categoryRepository.AddAsync(category);
+            await _categoryRepository.SaveChangesAsync(cancellationToken);
+
+            return DataResult<CategoryResponse>
+                .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.AddSuccess, HttpStatusCode.Created);
+        }
+
+        private IQueryable<Category> Filtering(IQueryable<Category> query, GetAllCategoryQuery request)
+        {
             if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(c => c.Name.ToLower().Contains(request.Keyword.ToLower()));
+                query = query.Where(c => c.Name.Contains(request.Keyword, StringComparison.CurrentCultureIgnoreCase));
             }
 
             switch (request.SortBy)
@@ -43,21 +71,18 @@ namespace Restaurant.Persistence.Services.Catalog
                     break;
             }
 
-            var totalItems = query.Count();
-            var totalPages = (int)Math.Ceiling((decimal)totalItems / request.PageSize);
+            return query;
+        }
 
-            var categories = query
+        private IQueryable<Category> Paginating(IQueryable<Category> query, GetAllCategoryQuery request, out int totalItems)
+        {
+            totalItems = query.Count();
+
+            query = query
                 .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .Select(c => new CategoryResponse
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Description = c.Description
-                })
-                .ToList();
+                .Take(request.PageSize);
 
-            return new PageResult<IEnumerable<CategoryResponse>>(categories, totalItems, totalPages, request.Page, request.PageSize);
+            return query;
         }
     }
 }

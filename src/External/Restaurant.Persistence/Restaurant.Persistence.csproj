@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Configurations\Catalog\" />
-    <Folder Include="Mapping\Catalog\" />
   </ItemGroup>
 
   <ItemGroup>

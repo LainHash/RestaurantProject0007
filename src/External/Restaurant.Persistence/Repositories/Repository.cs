@@ -40,5 +40,10 @@ namespace Restaurant.Persistence.Repositories
         {
             Entity.Remove(entity);
         }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

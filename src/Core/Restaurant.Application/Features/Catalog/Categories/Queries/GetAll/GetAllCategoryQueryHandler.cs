@@ -1,7 +1,7 @@
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Messaging;
 using Restaurant.Application.Services.Catalog;
-using Restaurant.Contracts.DTOs.Catalog;
+using Restaurant.Contracts.DTOs.Catalog.Categories;
 
 namespace Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 

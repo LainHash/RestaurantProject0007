@@ -1,9 +1,7 @@
 using Restaurant.Application.Common.Abstraction;
-using Restaurant.Application.Common.Enums;
 using Restaurant.Application.Common.Models.Result;
-using Restaurant.Application.Constants;
 using Restaurant.Application.Messaging;
-using Restaurant.Contracts.DTOs.Catalog;
+using Restaurant.Contracts.DTOs.Catalog.Categories;
 
 namespace Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 

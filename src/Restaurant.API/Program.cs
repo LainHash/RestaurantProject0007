@@ -14,11 +14,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 
-//Auto Mapper
-builder.Services.AddAutoMapper(cfg =>
-{
-    cfg.AddMaps(typeof(Program).Assembly);
-});
 
 var app = builder.Build();
 

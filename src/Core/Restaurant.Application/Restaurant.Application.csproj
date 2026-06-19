@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
-    <Folder Include="Constants\Messages\" />
-    <Folder Include="Features\Catalog\Categories\Commands\" />
     <Folder Include="Features\Catalog\Categories\Validators\" />
   </ItemGroup>
 
