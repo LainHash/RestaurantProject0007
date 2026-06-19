@@ -8,7 +8,7 @@ namespace Restaurant.Persistence.Mapping.Catalog
     {
         public CategoryMP()
         {
-            CreateMap<Category, CategoryResponse>().ReverseMap();
+            CreateMap<Category, CategoryResponse>();
             CreateMap<CreateCategoryRequest, Category>();
             CreateMap<UpdateCategoryRequest, Category>();
         }

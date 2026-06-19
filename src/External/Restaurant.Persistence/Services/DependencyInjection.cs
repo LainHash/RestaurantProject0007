@@ -63,7 +63,10 @@ namespace Restaurant.Persistence.Services
             // ── AutoMapper ───────────────────────────────────────────────────
             services.AddAutoMapper(cfg => cfg.AddMaps(typeof(DependencyInjection).Assembly));
 
+
+            // ── Service ──────────────────────────────────────────────────────
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
 
             return services;
         }

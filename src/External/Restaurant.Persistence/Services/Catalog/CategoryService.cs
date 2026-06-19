@@ -30,10 +30,9 @@ namespace Restaurant.Persistence.Services.Catalog
 
             query = Paginating(query, request, out int totalItems);
 
-            var categories = _mapper.Map<List<CategoryResponse>>(query.ToList());
-
+            var response = _mapper.Map<List<CategoryResponse>>(query.ToList());
             return PageResult<IEnumerable<CategoryResponse>>
-                .Success(categories, totalItems, request.Page, request.PageSize, Messages<Category>.GetAllSuccess);
+                .Success(response, totalItems, request.Page, request.PageSize, Messages<Category>.GetAllSuccess);
         }
 
         public async Task<DataResult<CategoryResponse>>
@@ -50,11 +49,13 @@ namespace Restaurant.Persistence.Services.Catalog
             await _categoryRepository.AddAsync(category);
             await _categoryRepository.SaveChangesAsync(cancellationToken);
 
+            var response = _mapper.Map<CategoryResponse>(category);
             return DataResult<CategoryResponse>
-                .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.AddSuccess, HttpStatusCode.Created);
+                .Success(response, Messages<Category>.AddSuccess, HttpStatusCode.Created);
         }
 
-        public async Task<DataResult<CategoryResponse>> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken = default)
+        public async Task<DataResult<CategoryResponse>> 
+            UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken = default)
         {
             if (await _categoryRepository.IsNameUniqueAsync(request.Name, cancellationToken, id))
             {
@@ -74,11 +75,13 @@ namespace Restaurant.Persistence.Services.Catalog
             _categoryRepository.Update(category);
             await _categoryRepository.SaveChangesAsync(cancellationToken);
 
+            var response = _mapper.Map<CategoryResponse>(category);
             return DataResult<CategoryResponse>
-                .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.UpdateSuccess, HttpStatusCode.OK);
+                .Success(response, Messages<Category>.UpdateSuccess, HttpStatusCode.OK);
         }
 
-        public async Task<Result> DeleteCategoryAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result> 
+            DeleteCategoryAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
             if (category is null)
@@ -96,7 +99,8 @@ namespace Restaurant.Persistence.Services.Catalog
                 .Success(Messages<Category>.DeleteSuccess, HttpStatusCode.OK);
         }
 
-        public async Task<Result> RestoreCategoryAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<Result> 
+            RestoreCategoryAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
             if (category is null)
