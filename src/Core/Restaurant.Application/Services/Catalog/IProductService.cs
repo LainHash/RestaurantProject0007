@@ -11,5 +11,17 @@ namespace Restaurant.Application.Services.Catalog
 
         Task<DataResult<ProductResponse>>
             GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
+
+        Task<DataResult<ProductResponse>>
+            CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken);
+
+        Task<DataResult<ProductResponse>>
+            UpdateProductAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken);
+
+        Task<Result>
+            DeleteProductAsync(Guid id, CancellationToken cancellationToken);
+
+        Task<Result>
+            RestoreProductAsync(Guid id, CancellationToken cancellationToken);
     }
 }

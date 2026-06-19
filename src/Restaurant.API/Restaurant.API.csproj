@@ -28,4 +28,8 @@
     <ProjectReference Include="..\External\Restaurant.Presentation\Restaurant.Presentation.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
 </Project>

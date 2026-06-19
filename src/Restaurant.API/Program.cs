@@ -1,4 +1,4 @@
-using Restaurant.Application;
+using Restaurant.Application.Services;
 using Restaurant.Persistence.Services;
 
 var builder = WebApplication.CreateBuilder(args);

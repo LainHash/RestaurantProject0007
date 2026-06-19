@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Domain.Entities.Catalog;
+using Restaurant.Domain.Entities.Inventory;
+using Restaurant.Domain.Entities.Misc;
 using System.Reflection;
 
 namespace Restaurant.Persistence.Contexts
@@ -14,9 +16,9 @@ namespace Restaurant.Persistence.Contexts
         // ── DbSets ──────────────────────────────────────────────────────────
         public DbSet<Category> Categories { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<Domain.Entities.Inventory.ProductStock> ProductStocks { get; set; } = null!;
-        public DbSet<Domain.Entities.Misc.Image> Images { get; set; } = null!;
-        public DbSet<Domain.Entities.Misc.ProductImage> ProductImages { get; set; } = null!;
+        public DbSet<ProductStock> ProductStocks { get; set; } = null!;
+        public DbSet<Image> Images { get; set; } = null!;
+        public DbSet<ProductImage> ProductImages { get; set; } = null!;
 
         // ── Model building ──────────────────────────────────────────────────
         protected override void OnModelCreating(ModelBuilder modelBuilder)

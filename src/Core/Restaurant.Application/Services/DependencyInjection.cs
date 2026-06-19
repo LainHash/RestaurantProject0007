@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Application.Behaviors;
 
-namespace Restaurant.Application
+namespace Restaurant.Application.Services
 {
     public static class DependencyInjection
     {

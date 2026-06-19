@@ -11,5 +11,15 @@ namespace Restaurant.Domain.Entities.Inventory
         public Guid ProductId { get; set; }
 
         public virtual Product Product { get; set; } = null!;
+
+        public ProductStock() { }
+
+        public ProductStock(decimal unitPrice, string unit, decimal stockQuantity, Guid productId)
+        {
+            UnitPrice = unitPrice;
+            Unit = unit;
+            StockQuantity = stockQuantity;
+            ProductId = productId;
+        }
     }
 }
