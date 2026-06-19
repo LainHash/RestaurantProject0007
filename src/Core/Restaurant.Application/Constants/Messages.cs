@@ -13,6 +13,10 @@
 
         public static string NotFound => $"{typeof(TEntity).Name} not found.";
         public static string DeleteSuccess => $"{typeof(TEntity).Name} deleted successfully.";
+        public static string AlreadyDeleted => $"{typeof(TEntity).Name} has already been deleted.";
+        public static string DeleteError => $"An error occurred while deleting {typeof(TEntity).Name}.";
         public static string RestoreSuccess => $"{typeof(TEntity).Name} restore successfully.";
+        public static string NotYetDeleted => $"{typeof(TEntity).Name} has not yet been deleted.";
+        public static string RestoreError => $"An error occurred while restoring {typeof(TEntity).Name}.";
     }
 }

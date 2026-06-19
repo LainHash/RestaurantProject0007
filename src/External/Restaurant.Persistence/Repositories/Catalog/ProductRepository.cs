@@ -15,10 +15,13 @@ namespace Restaurant.Persistence.Repositories.Catalog
             _context = context;
         }
 
-        public async Task<ProductStock> AddAsync(ProductStock entity, CancellationToken cancellationToken = default)
+        public new async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            await _context.ProductStocks.AddAsync(entity);
-            return entity;
+            return await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductStock)
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

@@ -19,12 +19,16 @@ namespace Restaurant.Domain.Entities.Catalog
 
         public Product() { }
 
-        public Product(string name, string? description, bool isMadeToOrder, Guid categoryId)
+        public void Delete()
         {
-            Name = name;
-            Description = description;
-            IsMadeToOrder = isMadeToOrder;
-            CategoryId = categoryId;
+            IsDeleted = true;
+            DeletedAt = DateTime.UtcNow;
+        }
+
+        public void Restore()
+        {
+            IsDeleted = false;
+            DeletedAt = null;
         }
     }
 }

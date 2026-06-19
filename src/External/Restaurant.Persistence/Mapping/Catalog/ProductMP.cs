@@ -1,6 +1,7 @@
 using AutoMapper;
 using Restaurant.Contracts.DTOs.Catalog.Products;
 using Restaurant.Domain.Entities.Catalog;
+using Restaurant.Domain.Entities.Inventory;
 
 namespace Restaurant.Persistence.Mapping.Catalog
 {
@@ -13,6 +14,12 @@ namespace Restaurant.Persistence.Mapping.Catalog
                 .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.ProductStock != null ? src.ProductStock.UnitPrice : 0))
                 .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.ProductStock != null ? src.ProductStock.Unit : string.Empty))
                 .ForMember(dest => dest.StockQuantity, opt => opt.MapFrom(src => src.ProductStock != null ? src.ProductStock.StockQuantity : 0));
+
+            CreateMap<CreateProductRequest, Product>();
+            CreateMap<CreateProductRequest, ProductStock>();
+
+            CreateMap<UpdateProductRequest, Product>();
+            CreateMap<UpdateProductRequest, ProductStock>();
         }
     }
 }

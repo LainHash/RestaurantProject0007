@@ -48,12 +48,9 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<DataResult<ProductResponse>> 
             GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetAllAsync(cancellationToken)
-                .Include(p => p.Category)
-                .Include(p => p.ProductStock)
-                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
 
-            if (product == null)
+            if (product is null)
             {
                 return DataResult<ProductResponse>
                     .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
@@ -98,19 +95,75 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<DataResult<ProductResponse>>
             UpdateProductAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken)
         {
-            throw new Exception(Messages<Product>.UpdateError);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+
+            if (product is null)
+            {
+                return DataResult<ProductResponse>
+                    .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            _mapper.Map(request, product);
+            _mapper.Map(request, product.ProductStock);
+
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync(cancellationToken);
+
+            var response = _mapper.Map<ProductResponse>(product);
+            return DataResult<ProductResponse>
+                .Success(response, Messages<Product>.UpdateSuccess, HttpStatusCode.OK);
         }
 
         public async Task<Result>
             DeleteProductAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new Exception(Messages<Product>.DeleteSuccess);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+
+            if (product is null)
+            {
+                return DataResult<ProductResponse>
+                    .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            if (product.IsDeleted)
+            {
+                return DataResult<ProductResponse>
+                    .Fail(Messages<Product>.DeleteError, HttpStatusCode.Conflict);
+            }
+
+            product.Delete();
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
+
+            var response = _mapper.Map<ProductResponse>(product);
+            return DataResult<ProductResponse>
+                .Success(response, Messages<Product>.DeleteSuccess, HttpStatusCode.OK);
         }
 
         public async Task<Result>
             RestoreProductAsync(Guid id, CancellationToken cancellationToken)
         {
-            throw new Exception(Messages<Product>.RestoreSuccess);
+            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+
+            if (product is null)
+            {
+                return DataResult<ProductResponse>
+                    .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            if (!product.IsDeleted)
+            {
+                return DataResult<ProductResponse>
+                    .Fail(Messages<Product>.RestoreError, HttpStatusCode.Conflict);
+            }
+
+            product.Restore();
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
+
+            var response = _mapper.Map<ProductResponse>(product);
+            return DataResult<ProductResponse>
+                .Success(response, Messages<Product>.RestoreSuccess, HttpStatusCode.OK);
         }
 
         private IQueryable<Product> Filtering(IQueryable<Product> query, GetAllProductQuery request)

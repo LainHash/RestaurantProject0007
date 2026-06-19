@@ -90,6 +90,12 @@ namespace Restaurant.Persistence.Services.Catalog
                     .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
             }
 
+            if (category.IsDeleted)
+            {
+                return Result
+                    .Fail(Messages<Category>.DeleteError, HttpStatusCode.Conflict);
+            }
+
             category.Delete();
 
             _categoryRepository.Update(category);
@@ -107,6 +113,12 @@ namespace Restaurant.Persistence.Services.Catalog
             {
                 return Result
                     .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            if (!category.IsDeleted)
+            {
+                return Result
+                    .Fail(Messages<Category>.RestoreError, HttpStatusCode.Conflict);
             }
 
             category.Restore();
