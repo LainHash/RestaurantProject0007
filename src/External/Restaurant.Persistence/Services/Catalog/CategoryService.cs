@@ -21,7 +21,7 @@ namespace Restaurant.Persistence.Services.Catalog
             _mapper = mapper;
         }
 
-        public async Task<PageResult<IEnumerable<CategoryResponse>>> 
+        public async Task<PageResult<IEnumerable<CategoryResponse>>>
             GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
         {
             var query = _categoryRepository.GetAllAsync();
@@ -36,7 +36,7 @@ namespace Restaurant.Persistence.Services.Catalog
                 .Success(categories, totalItems, request.Page, request.PageSize, Messages<Category>.GetAllSuccess);
         }
 
-        public async Task<DataResult<CategoryResponse>> 
+        public async Task<DataResult<CategoryResponse>>
             CreateCategoryAsync(CreateCategoryRequest request, CancellationToken cancellationToken = default)
         {
             var category = _mapper.Map<Category>(request);
@@ -46,6 +46,24 @@ namespace Restaurant.Persistence.Services.Catalog
 
             return DataResult<CategoryResponse>
                 .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.AddSuccess, HttpStatusCode.Created);
+        }
+
+        public async Task<DataResult<CategoryResponse>> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellation = default)
+        {
+            var category = await _categoryRepository.GetByIdAsync(id, cancellation);
+            if (category == null)
+            {
+                return DataResult<CategoryResponse>
+                    .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
+            }
+
+            _mapper.Map(request, category);
+
+            _categoryRepository.Update(category);
+            await _categoryRepository.SaveChangesAsync(cancellation);
+
+            return DataResult<CategoryResponse>
+                .Success(_mapper.Map<CategoryResponse>(category), Messages<Category>.UpdateSuccess, HttpStatusCode.OK);
         }
 
         private IQueryable<Category> Filtering(IQueryable<Category> query, GetAllCategoryQuery request)
@@ -84,5 +102,7 @@ namespace Restaurant.Persistence.Services.Catalog
 
             return query;
         }
+
+
     }
 }

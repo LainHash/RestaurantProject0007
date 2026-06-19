@@ -11,5 +11,8 @@ namespace Restaurant.Application.Services.Catalog
 
         Task<DataResult<CategoryResponse>>
             CreateCategoryAsync(CreateCategoryRequest request, CancellationToken cancellationToken = default);
+
+        Task<DataResult<CategoryResponse>>
+            UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellation = default);
     }
 }

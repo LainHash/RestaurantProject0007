@@ -9,5 +9,7 @@
         public static string GetByIdSuccess => $"{typeof(TEntity).Name} details listed successfully.";
         public static string GetByIdError => $"An error occurred while listing the {typeof(TEntity).Name} details.";
         public static string UpdateSuccess => $"{typeof(TEntity).Name} updated successfully.";
+
+        public static string NotFound => $"{typeof(TEntity).Name} not found.";
     }
 }

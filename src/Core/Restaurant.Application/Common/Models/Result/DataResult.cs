@@ -32,9 +32,14 @@ namespace Restaurant.Application.Common.Models.Result
             StatusCode = (int)statusCode;
         }
 
-        public static DataResult<T> Success(T data, string message = "Success", HttpStatusCode statusCode = HttpStatusCode.OK) 
+        public static DataResult<T> Success(T data, string message = "Success", HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             return new DataResult<T>(data, true, message, statusCode);
+        }
+
+        public new static DataResult<T> Fail(string message = "Success", HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        {
+            return new DataResult<T>(false, message, statusCode);
         }
     }
 }

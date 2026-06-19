@@ -10,6 +10,7 @@ namespace Restaurant.Persistence.Mapping.Catalog
         {
             CreateMap<Category, CategoryResponse>().ReverseMap();
             CreateMap<CreateCategoryRequest, Category>();
+            CreateMap<UpdateCategoryRequest, Category>();
         }
     }
 }

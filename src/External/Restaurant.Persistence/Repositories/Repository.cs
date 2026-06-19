@@ -15,17 +15,17 @@ namespace Restaurant.Persistence.Repositories
             Entity = _context.Set<TEntity>();
         }
 
-        public IQueryable<TEntity> GetAllAsync()
+        public IQueryable<TEntity> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return Entity.AsNoTracking().AsQueryable();
         }
 
-        public async Task<TEntity?> GetByIdAsync(Guid id)
+        public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await Entity.FindAsync(id);
         }
 
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await Entity.AddAsync(entity);
             return entity;

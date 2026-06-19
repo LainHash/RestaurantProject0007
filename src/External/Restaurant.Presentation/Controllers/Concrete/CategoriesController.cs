@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.Features.Catalog.Categories.Commands.Create;
+using Restaurant.Application.Features.Catalog.Categories.Commands.Update;
 using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 using Restaurant.Contracts.DTOs.Catalog.Categories;
 using Restaurant.Presentation.Controllers.Abstraction;
@@ -19,6 +20,13 @@ public class CategoriesController : ApiController
     public async Task<IActionResult> Create([FromBody] CreateCategoryRequest request, CancellationToken cancellation)
     {
         var result = await Sender.Send(new CreateCategoryCommand(request), cancellation);
+        return StatusCode(result.StatusCode, result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellation)
+    {
+        var result = await Sender.Send(new UpdateCategoryCommand(id, request), cancellation);
         return StatusCode(result.StatusCode, result);
     }
 }
