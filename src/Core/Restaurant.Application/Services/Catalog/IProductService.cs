@@ -7,7 +7,7 @@ namespace Restaurant.Application.Services.Catalog
     public interface IProductService
     {
         Task<PageResult<IEnumerable<ProductResponse>>>
-            GetProductsAsync(GetAllProductQuery request, CancellationToken cancellationToken);
+            GetProductsAsync(GetAllProductSpecification specification, CancellationToken cancellationToken);
 
         Task<DataResult<ProductResponse>>
             GetProductByIdAsync(Guid id, CancellationToken cancellationToken);

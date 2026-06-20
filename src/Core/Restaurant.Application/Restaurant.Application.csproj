@@ -25,6 +25,7 @@
     <Folder Include="Features\Catalog\Products\Commands\Delete\" />
     <Folder Include="Features\Catalog\Products\Commands\Restore\" />
     <Folder Include="Features\Catalog\Products\Commands\Update\" />
+    <Folder Include="Features\Catalog\Products\Specifications\" />
     <Folder Include="Features\Catalog\Products\Validators\" />
   </ItemGroup>
 

@@ -1,5 +1,4 @@
 using AutoMapper;
-using Restaurant.Application.Common.Enums;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
 using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
@@ -24,13 +23,12 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<PageResult<IEnumerable<CategoryResponse>>>
             GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
         {
-            var query = _categoryRepository.GetAllAsync();
+            var spec = new GetAllCategorySpecification(request);
 
-            query = Filtering(query, request);
+            var totalItems = await _categoryRepository.CountAsync(spec, cancellationToken);
+            var categories = await _categoryRepository.GetAllAsync(spec, cancellationToken);
 
-            query = Paginating(query, request, out int totalItems);
-
-            var response = _mapper.Map<List<CategoryResponse>>(query.ToList());
+            var response = _mapper.Map<List<CategoryResponse>>(categories);
             return PageResult<IEnumerable<CategoryResponse>>
                 .Success(response, totalItems, request.Page, request.PageSize, Messages<Category>.GetAllSuccess);
         }
@@ -128,43 +126,6 @@ namespace Restaurant.Persistence.Services.Catalog
 
             return Result
                 .Success(Messages<Category>.RestoreSuccess, HttpStatusCode.OK);
-        }
-
-        private IQueryable<Category> Filtering(IQueryable<Category> query, GetAllCategoryQuery request)
-        {
-            if (!string.IsNullOrEmpty(request.Keyword))
-            {
-                query = query.Where(c => c.Name.Contains(request.Keyword, StringComparison.CurrentCultureIgnoreCase));
-            }
-
-            switch (request.SortBy)
-            {
-                case nameof(SortType.CreatedAtAsc):
-                    query = query.OrderBy(p => p.CreatedAt);
-                    break;
-                case nameof(SortType.NameAsc):
-                    query = query.OrderBy(p => p.Name);
-                    break;
-                case nameof(SortType.NameDesc):
-                    query = query.OrderByDescending(p => p.Name);
-                    break;
-                default:
-                    query = query.OrderByDescending(p => p.CreatedAt);
-                    break;
-            }
-
-            return query;
-        }
-
-        private IQueryable<Category> Paginating(IQueryable<Category> query, GetAllCategoryQuery request, out int totalItems)
-        {
-            totalItems = query.Count();
-
-            query = query
-                .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize);
-
-            return query;
         }
 
         

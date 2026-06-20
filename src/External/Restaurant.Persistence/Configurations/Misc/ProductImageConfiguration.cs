@@ -15,6 +15,9 @@ namespace Restaurant.Persistence.Configurations.Misc
                    .HasForeignKey(x => x.ImageId)
                    .OnDelete(DeleteBehavior.Cascade);
 
+            builder.HasIndex(x => new { x.ProductId, x.DisplayOrder })
+                .IsUnique();
+
             // Product relationship is already configured in ProductConfiguration
         }
     }
