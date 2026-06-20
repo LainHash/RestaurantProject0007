@@ -22,6 +22,13 @@ namespace Restaurant.Domain.Specifications
 
         public bool IsPagingEnabled { get; private set; }
 
+        public bool IgnoreQueryFilters { get; private set; }
+
+        protected void AddIgnoreQueryFilters()
+        {
+            IgnoreQueryFilters = true;
+        }
+
         protected void AddInclude(Expression<Func<T, object>> include)
         {
             Includes.Add(include);

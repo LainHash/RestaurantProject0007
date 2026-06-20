@@ -14,5 +14,7 @@ namespace Restaurant.Domain.Specifications
         int Skip { get; }
         int Take { get; }
         bool IsPagingEnabled { get; }
+
+        public bool IgnoreQueryFilters { get; }
     }
 }

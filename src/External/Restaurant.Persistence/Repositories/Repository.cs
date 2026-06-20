@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Restaurant.Application.Features.Catalog.Products.Queries.GetOne;
 using Restaurant.Domain.Repositories;
 using Restaurant.Domain.Specifications;
 using Restaurant.Persistence.Contexts;
@@ -42,6 +43,14 @@ namespace Restaurant.Persistence.Repositories
         public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await Entity.FindAsync(id);
+        }
+
+        public async Task<TEntity?> GetByIdAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+            var query = SpecificationEvaluator
+                .GetQuery(Entity.AsQueryable(), specification);
+
+            return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)

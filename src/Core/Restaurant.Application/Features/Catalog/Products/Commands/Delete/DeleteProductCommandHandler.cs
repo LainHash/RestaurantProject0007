@@ -15,7 +15,8 @@ namespace Restaurant.Application.Features.Catalog.Products.Commands.Delete
 
         public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var response = await _productService.DeleteProductAsync(request.Id, cancellationToken);
+            var specification = new DeleteProductSpecification(request);
+            var response = await _productService.DeleteProductAsync(specification, cancellationToken);
             return response;
         }
     }

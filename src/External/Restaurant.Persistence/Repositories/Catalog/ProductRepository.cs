@@ -14,14 +14,5 @@ namespace Restaurant.Persistence.Repositories.Catalog
         {
             _context = context;
         }
-
-        public new async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
-        {
-            return await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductStock)
-                .Where(p => p.Id == id)
-                .FirstOrDefaultAsync(cancellationToken);
-        }
     }
 }

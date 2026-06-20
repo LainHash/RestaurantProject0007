@@ -7,6 +7,11 @@ namespace Restaurant.Persistence.Specifications
     {
         public static IQueryable<T> GetQuery<T>(IQueryable<T> query, ISpecification<T> spec, bool applyPaging = true) where T : class
         {
+            if(spec.IgnoreQueryFilters)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
             // 1. Áp dụng bộ lọc Điều kiện (Criteria / Where)
             if (spec.Criteria != null)
             {

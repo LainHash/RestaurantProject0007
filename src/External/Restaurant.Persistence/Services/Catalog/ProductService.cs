@@ -2,7 +2,10 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
+using Restaurant.Application.Features.Catalog.Products.Commands.Delete;
+using Restaurant.Application.Features.Catalog.Products.Commands.Restore;
 using Restaurant.Application.Features.Catalog.Products.Queries.GetAll;
+using Restaurant.Application.Features.Catalog.Products.Queries.GetOne;
 using Restaurant.Application.Services;
 using Restaurant.Application.Services.Catalog;
 using Restaurant.Contracts.DTOs.Catalog.Products;
@@ -30,20 +33,20 @@ namespace Restaurant.Persistence.Services.Catalog
         public async Task<PageResult<IEnumerable<ProductResponse>>>
             GetProductsAsync(GetAllProductSpecification specification, CancellationToken cancellationToken)
         {
-
+            var page = (specification.Skip / specification.Take) + 1;
             var totalItems = await _productRepository.CountAsync(specification, cancellationToken);
             var products = await _productRepository.GetAllAsync(specification, cancellationToken);
 
             var response = _mapper.Map<List<ProductResponse>>(products);
             return PageResult<IEnumerable<ProductResponse>>
-                .Success(response, totalItems, (specification.Skip / specification.Take) + 1, specification.Take, Messages<Product>.GetAllSuccess);
+                .Success(response, totalItems, page, specification.Take, Messages<Product>.GetAllSuccess);
         }
 
 
         public async Task<DataResult<ProductResponse>>
-            GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
+            GetProductByIdAsync(GetProductByIdSpecification specification, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(specification, cancellationToken);
 
             if (product is null)
             {
@@ -113,56 +116,54 @@ namespace Restaurant.Persistence.Services.Catalog
 
 
         public async Task<Result>
-            DeleteProductAsync(Guid id, CancellationToken cancellationToken)
+            DeleteProductAsync(DeleteProductSpecification specification, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(specification, cancellationToken);
 
             if (product is null)
             {
-                return DataResult<ProductResponse>
+                return Result
                     .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
             }
 
             if (product.IsDeleted)
             {
-                return DataResult<ProductResponse>
-                    .Fail(Messages<Product>.DeleteError, HttpStatusCode.Conflict);
+                return Result
+                    .Fail(Messages<Product>.AlreadyDeleted, HttpStatusCode.Conflict);
             }
 
             product.Delete();
             _productRepository.Update(product);
             await _productRepository.SaveChangesAsync();
 
-            var response = _mapper.Map<ProductResponse>(product);
-            return DataResult<ProductResponse>
-                .Success(response, Messages<Product>.DeleteSuccess, HttpStatusCode.OK);
+            return Result
+                .Success(Messages<Product>.DeleteSuccess, HttpStatusCode.OK);
         }
 
 
         public async Task<Result>
-            RestoreProductAsync(Guid id, CancellationToken cancellationToken)
+            RestoreProductAsync(RestoreProductSpecification specification, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(specification, cancellationToken);
 
             if (product is null)
             {
-                return DataResult<ProductResponse>
+                return Result
                     .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
             }
 
             if (!product.IsDeleted)
             {
-                return DataResult<ProductResponse>
-                    .Fail(Messages<Product>.RestoreError, HttpStatusCode.Conflict);
+                return Result
+                    .Fail(Messages<Product>.NotYetDeleted, HttpStatusCode.Conflict);
             }
 
             product.Restore();
             _productRepository.Update(product);
             await _productRepository.SaveChangesAsync();
 
-            var response = _mapper.Map<ProductResponse>(product);
-            return DataResult<ProductResponse>
-                .Success(response, Messages<Product>.RestoreSuccess, HttpStatusCode.OK);
+            return Result
+                .Success(Messages<Product>.RestoreSuccess, HttpStatusCode.OK);
         }
     }
 }

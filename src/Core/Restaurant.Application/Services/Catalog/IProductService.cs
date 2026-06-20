@@ -1,5 +1,8 @@
 ﻿using Restaurant.Application.Common.Models.Result;
+using Restaurant.Application.Features.Catalog.Products.Commands.Delete;
+using Restaurant.Application.Features.Catalog.Products.Commands.Restore;
 using Restaurant.Application.Features.Catalog.Products.Queries.GetAll;
+using Restaurant.Application.Features.Catalog.Products.Queries.GetOne;
 using Restaurant.Contracts.DTOs.Catalog.Products;
 
 namespace Restaurant.Application.Services.Catalog
@@ -10,7 +13,7 @@ namespace Restaurant.Application.Services.Catalog
             GetProductsAsync(GetAllProductSpecification specification, CancellationToken cancellationToken);
 
         Task<DataResult<ProductResponse>>
-            GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
+            GetProductByIdAsync(GetProductByIdSpecification specification, CancellationToken cancellationToken);
 
         Task<DataResult<ProductResponse>>
             CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken);
@@ -19,9 +22,9 @@ namespace Restaurant.Application.Services.Catalog
             UpdateProductAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken);
 
         Task<Result>
-            DeleteProductAsync(Guid id, CancellationToken cancellationToken);
+            DeleteProductAsync(DeleteProductSpecification specification, CancellationToken cancellationToken);
 
         Task<Result>
-            RestoreProductAsync(Guid id, CancellationToken cancellationToken);
+            RestoreProductAsync(RestoreProductSpecification specification, CancellationToken cancellationToken);
     }
 }

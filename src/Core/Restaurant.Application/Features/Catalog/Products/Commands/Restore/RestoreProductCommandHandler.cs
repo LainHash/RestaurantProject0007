@@ -15,7 +15,8 @@ namespace Restaurant.Application.Features.Catalog.Products.Commands.Restore
 
         public async Task<Result> Handle(RestoreProductCommand request, CancellationToken cancellationToken)
         {
-            var response = await _productService.RestoreProductAsync(request.Id, cancellationToken);
+            var specification = new RestoreProductSpecification(request);
+            var response = await _productService.RestoreProductAsync(specification, cancellationToken);
             return response;
         }
     }
