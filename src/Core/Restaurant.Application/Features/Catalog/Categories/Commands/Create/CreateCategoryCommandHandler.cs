@@ -14,7 +14,8 @@ namespace Restaurant.Application.Features.Catalog.Categories.Commands.Create
         }
         public async Task<DataResult<CategoryResponse>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var response = await _categoryService.CreateCategoryAsync(request.CreateCategoryRequest, cancellationToken);
+            var specification = new CreateCategorySpecification(request);
+            var response = await _categoryService.CreateCategoryAsync(specification, cancellationToken);
             return response;
         }
     }
