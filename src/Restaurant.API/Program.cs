@@ -1,6 +1,17 @@
 using Restaurant.Application.Services;
 using Restaurant.Persistence.Services;
 
+// Tìm file .env từ thư mục hiện tại, leo dần lên thư mục cha
+// → hoạt động dù chạy từ VS (bin/Debug/...) hay dotnet run (src/Restaurant.API/)
+var searchDir = Directory.GetCurrentDirectory();
+while (searchDir is not null)
+{
+    var envPath = Path.Combine(searchDir, ".env");
+    if (File.Exists(envPath)) { DotNetEnv.Env.Load(envPath); break; }
+    searchDir = Directory.GetParent(searchDir)?.FullName;
+}
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

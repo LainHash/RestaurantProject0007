@@ -3,10 +3,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Application.Services;
 using Restaurant.Application.Services.Catalog;
+using Restaurant.Contracts.Settings;
 using Restaurant.Domain.Repositories;
+using Restaurant.Domain.Repositories.Misc;
 using Restaurant.Persistence.Contexts;
 using Restaurant.Persistence.Repositories;
 using Restaurant.Persistence.Repositories.Catalog;
+using Restaurant.Persistence.Repositories.Misc;
 using Restaurant.Persistence.Seeders;
 using Restaurant.Persistence.Services.Catalog;
 
@@ -68,7 +71,13 @@ namespace Restaurant.Persistence.Services
             // ── Service ──────────────────────────────────────────────────────
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // ── Cloudinary ───────────────────────────────────────────────────
+            services.Configure<CloudinarySettings>(
+                configuration.GetSection(CloudinarySettings.SectionName));
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             return services;
         }
