@@ -1,5 +1,7 @@
-using Restaurant.Application.Services;
-using Restaurant.Persistence.Services;
+using Restaurant.Application;
+using Restaurant.Infrastructure;
+using Restaurant.Persistence;
+
 
 // Tìm file .env từ thư mục hiện tại, leo dần lên thư mục cha
 // → hoạt động dù chạy từ VS (bin/Debug/...) hay dotnet run (src/Restaurant.API/)
@@ -24,6 +26,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 
 var app = builder.Build();

@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Restaurant.Application\Restaurant.Application.csproj" />
+    <ProjectReference Include="..\External\Restaurant.Infrastructure\Restaurant.Infrastructure.csproj" />
     <ProjectReference Include="..\External\Restaurant.Persistence\Restaurant.Persistence.csproj" />
     <ProjectReference Include="..\External\Restaurant.Presentation\Restaurant.Presentation.csproj" />
   </ItemGroup>

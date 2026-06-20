@@ -5,7 +5,7 @@ using Restaurant.Application.Common.Models;
 using Restaurant.Application.Services;
 using Restaurant.Contracts.Settings;
 
-namespace Restaurant.Persistence.Services
+namespace Restaurant.Infrastructure.Services
 {
     public class CloudinaryService : ICloudinaryService
     {
