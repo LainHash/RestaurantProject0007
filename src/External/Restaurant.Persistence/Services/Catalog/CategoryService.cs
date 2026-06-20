@@ -1,8 +1,10 @@
 using AutoMapper;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
+using Restaurant.Application.Features.Catalog.Categories.Commands.Create;
 using Restaurant.Application.Features.Catalog.Categories.Commands.Delete;
 using Restaurant.Application.Features.Catalog.Categories.Commands.Restore;
+using Restaurant.Application.Features.Catalog.Categories.Commands.Update;
 using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 using Restaurant.Application.Services.Catalog;
 using Restaurant.Contracts.DTOs.Catalog.Categories;
@@ -36,15 +38,15 @@ namespace Restaurant.Persistence.Services.Catalog
         }
 
         public async Task<DataResult<CategoryResponse>>
-            CreateCategoryAsync(CreateCategoryRequest request, CancellationToken cancellationToken = default)
+            CreateCategoryAsync(CreateCategorySpecification specification, CancellationToken cancellationToken = default)
         {
-            if(await _categoryRepository.IsNameUniqueAsync(request.Name, cancellationToken))
+            if(await _categoryRepository.IsNameUniqueAsync(specification.RequestBody.Name, cancellationToken))
             {
                 return DataResult<CategoryResponse>
                     .Fail(Messages<Category>.AddError, HttpStatusCode.Conflict);
             }
             
-            var category = _mapper.Map<Category>(request);
+            var category = _mapper.Map<Category>(specification.RequestBody);
 
             await _categoryRepository.AddAsync(category);
             await _categoryRepository.SaveChangesAsync(cancellationToken);
@@ -55,22 +57,22 @@ namespace Restaurant.Persistence.Services.Catalog
         }
 
         public async Task<DataResult<CategoryResponse>> 
-            UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken = default)
+            UpdateCategoryAsync(UpdateCategorySpecification specification, CancellationToken cancellationToken = default)
         {
-            if (await _categoryRepository.IsNameUniqueAsync(request.Name, cancellationToken, id))
+            if (await _categoryRepository.IsNameUniqueAsync(specification.RequestBody.Name, cancellationToken))
             {
                 return DataResult<CategoryResponse>
                     .Fail(Messages<Category>.UpdateError, HttpStatusCode.Conflict);
             }
 
-            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+            var category = await _categoryRepository.GetByIdAsync(specification, cancellationToken);
             if (category is null)
             {
                 return DataResult<CategoryResponse>
                     .Fail(Messages<Category>.NotFound, HttpStatusCode.NotFound);
             }
 
-            _mapper.Map(request, category);
+            _mapper.Map(specification.RequestBody, category);
 
             _categoryRepository.Update(category);
             await _categoryRepository.SaveChangesAsync(cancellationToken);
