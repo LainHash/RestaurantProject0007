@@ -14,7 +14,8 @@ namespace Restaurant.Application.Features.Catalog.Products.Queries.GetAll
         }
         public async Task<PageResult<IEnumerable<ProductResponse>>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
-            var response = await _productService.GetProductsAsync(request, cancellationToken);
+            var specification = new GetAllProductSpecification(request);
+            var response = await _productService.GetProductsAsync(specification, cancellationToken);
             return response;
         }
     }
