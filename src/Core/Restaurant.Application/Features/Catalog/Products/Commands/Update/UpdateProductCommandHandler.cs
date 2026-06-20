@@ -16,7 +16,8 @@ namespace Restaurant.Application.Features.Catalog.Products.Commands.Update
 
         public async Task<DataResult<ProductResponse>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
-            var response = await _productService.UpdateProductAsync(request.Id, request.UpdateProductRequest, cancellationToken);
+            var specification = new UpdateProductSpecification(request);
+            var response = await _productService.UpdateProductAsync(specification, cancellationToken);
             return response;
         }
     }

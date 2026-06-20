@@ -2,8 +2,10 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
+using Restaurant.Application.Features.Catalog.Products.Commands.Create;
 using Restaurant.Application.Features.Catalog.Products.Commands.Delete;
 using Restaurant.Application.Features.Catalog.Products.Commands.Restore;
+using Restaurant.Application.Features.Catalog.Products.Commands.Update;
 using Restaurant.Application.Features.Catalog.Products.Queries.GetAll;
 using Restaurant.Application.Features.Catalog.Products.Queries.GetOne;
 using Restaurant.Application.Services;
@@ -61,14 +63,14 @@ namespace Restaurant.Persistence.Services.Catalog
 
 
         public async Task<DataResult<ProductResponse>>
-            CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken)
+            CreateProductAsync(CreateProductSpecification specification, CancellationToken cancellationToken)
         {
             await using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
             try
             {
-                var product = _mapper.Map<Product>(request);
+                var product = _mapper.Map<Product>(specification.RequestBody);
 
-                var productStock = _mapper.Map<ProductStock>(request);
+                var productStock = _mapper.Map<ProductStock>(specification.RequestBody);
                 product.ProductStock = productStock;
 
                 await _productRepository.AddAsync(product);
@@ -85,7 +87,7 @@ namespace Restaurant.Persistence.Services.Catalog
             {
                 await transaction.RollbackAsync(cancellationToken);
 
-                _logger.LogError(ex, "Xảy ra lỗi khi tạo Product. Request data: {@Request}", request);
+                _logger.LogError(ex, "Xảy ra lỗi khi tạo Product. Request data: {@Request}", specification.RequestBody);
                 return DataResult<ProductResponse>
                     .Fail(Messages<Product>.AddError, HttpStatusCode.InternalServerError);
             }
@@ -93,9 +95,9 @@ namespace Restaurant.Persistence.Services.Catalog
 
 
         public async Task<DataResult<ProductResponse>>
-            UpdateProductAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken)
+            UpdateProductAsync(UpdateProductSpecification specification, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetByIdAsync(id, cancellationToken);
+            var product = await _productRepository.GetByIdAsync(specification, cancellationToken);
 
             if (product is null)
             {
@@ -103,8 +105,8 @@ namespace Restaurant.Persistence.Services.Catalog
                     .Fail(Messages<Product>.NotFound, HttpStatusCode.NotFound);
             }
 
-            _mapper.Map(request, product);
-            _mapper.Map(request, product.ProductStock);
+            _mapper.Map(specification.RequestBody, product);
+            _mapper.Map(specification.RequestBody, product.ProductStock);
 
             _productRepository.Update(product);
             await _productRepository.SaveChangesAsync(cancellationToken);

@@ -1,6 +1,8 @@
 ﻿using Restaurant.Application.Common.Models.Result;
+using Restaurant.Application.Features.Catalog.Products.Commands.Create;
 using Restaurant.Application.Features.Catalog.Products.Commands.Delete;
 using Restaurant.Application.Features.Catalog.Products.Commands.Restore;
+using Restaurant.Application.Features.Catalog.Products.Commands.Update;
 using Restaurant.Application.Features.Catalog.Products.Queries.GetAll;
 using Restaurant.Application.Features.Catalog.Products.Queries.GetOne;
 using Restaurant.Contracts.DTOs.Catalog.Products;
@@ -16,10 +18,10 @@ namespace Restaurant.Application.Services.Catalog
             GetProductByIdAsync(GetProductByIdSpecification specification, CancellationToken cancellationToken);
 
         Task<DataResult<ProductResponse>>
-            CreateProductAsync(CreateProductRequest request, CancellationToken cancellationToken);
+            CreateProductAsync(CreateProductSpecification specification, CancellationToken cancellationToken);
 
         Task<DataResult<ProductResponse>>
-            UpdateProductAsync(Guid id, UpdateProductRequest request, CancellationToken cancellationToken);
+            UpdateProductAsync(UpdateProductSpecification specification, CancellationToken cancellationToken);
 
         Task<Result>
             DeleteProductAsync(DeleteProductSpecification specification, CancellationToken cancellationToken);

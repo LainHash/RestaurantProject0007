@@ -22,7 +22,6 @@
     <Folder Include="Behaviors\" />
     <Folder Include="Common\Extensions\" />
     <Folder Include="Features\Catalog\Categories\Validators\" />
-    <Folder Include="Features\Catalog\Products\Commands\Update\" />
     <Folder Include="Features\Catalog\Products\Specifications\" />
     <Folder Include="Features\Catalog\Products\Validators\" />
   </ItemGroup>
