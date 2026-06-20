@@ -30,7 +30,13 @@ namespace Restaurant.Persistence.Specifications
                 query = spec.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
             }
 
-            // 4. Áp dụng Sắp xếp (OrderBy / OrderByDescending)
+            // 4. Áp dụng Includes dạng strongly-typed ThenInclude (IncludeAggregators)
+            if (spec.IncludeAggregators != null)
+            {
+                query = spec.IncludeAggregators.Aggregate(query, (current, aggregator) => aggregator(current));
+            }
+
+            // 5. Áp dụng Sắp xếp (OrderBy / OrderByDescending)
             if (spec.OrderBy != null)
             {
                 query = query.OrderBy(spec.OrderBy);

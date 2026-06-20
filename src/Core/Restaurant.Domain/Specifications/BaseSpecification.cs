@@ -12,6 +12,9 @@ namespace Restaurant.Domain.Specifications
         public List<string> IncludeStrings { get; }
             = new();
 
+        public List<Func<IQueryable<T>, IQueryable<T>>> IncludeAggregators { get; }
+            = new();
+
         public Expression<Func<T, object>>? OrderBy { get; private set; }
 
         public Expression<Func<T, object>>? OrderByDescending { get; private set; }
@@ -37,6 +40,11 @@ namespace Restaurant.Domain.Specifications
         protected void AddInclude(string includeString)
         {
             IncludeStrings.Add(includeString);
+        }
+
+        protected void AddIncludeAggregator(Func<IQueryable<T>, IQueryable<T>> aggregator)
+        {
+            IncludeAggregators.Add(aggregator);
         }
 
         protected void ApplyOrderBy(Expression<Func<T, object>> orderBy)

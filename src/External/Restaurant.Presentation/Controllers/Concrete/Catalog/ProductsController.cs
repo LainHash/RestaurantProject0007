@@ -10,7 +10,7 @@ using Restaurant.Presentation.Controllers.Abstraction;
 
 namespace Restaurant.Presentation.Controllers.Concrete.Catalog
 {
-    public class ProductController : ApiController
+    public class ProductsController : ApiController
     {
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetAllProductQuery query, CancellationToken cancellationToken)

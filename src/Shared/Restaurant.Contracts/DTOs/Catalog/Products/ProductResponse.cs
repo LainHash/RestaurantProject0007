@@ -1,4 +1,4 @@
-﻿using Restaurant.Contracts.DTOs.Catalog.Misc;
+using Restaurant.Contracts.DTOs.Catalog.Misc;
 
 namespace Restaurant.Contracts.DTOs.Catalog.Products
 {
@@ -16,7 +16,7 @@ namespace Restaurant.Contracts.DTOs.Catalog.Products
         public string Unit { get; set; } = string.Empty;
         public decimal StockQuantity { get; set; }
 
-        public string PrimaryImage { get; set; } = string.Empty;
+        public ImageResponse? PrimaryImage { get; set; }
         public IEnumerable<ImageResponse> Images { get; set; } = Enumerable.Empty<ImageResponse>();
 
         public bool IsAvailable { get; set; }

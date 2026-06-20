@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Restaurant.Application.Common.Enums;
 using Restaurant.Domain.Entities.Catalog;
+using Restaurant.Domain.Entities.Misc;
 using Restaurant.Domain.Specifications;
 
 namespace Restaurant.Application.Features.Catalog.Products.Queries.GetAll
@@ -11,6 +13,8 @@ namespace Restaurant.Application.Features.Catalog.Products.Queries.GetAll
             // Includes: eager load navigation properties
             AddInclude(p => p.Category);
             AddInclude(p => p.ProductStock);
+            AddIncludeAggregator(q => q.Include(p => p.ProductImages)
+                                       .ThenInclude((ProductImage pi) => pi.Image));
 
             // Criteria: kết hợp filter Keyword và CategoryName
             bool hasKeyword = !string.IsNullOrWhiteSpace(request.Keyword);
