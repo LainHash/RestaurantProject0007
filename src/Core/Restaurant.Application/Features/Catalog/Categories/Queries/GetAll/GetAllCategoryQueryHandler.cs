@@ -16,7 +16,8 @@ public class GetAllCategoryQueryHandler : IQueryHandler<GetAllCategoryQuery, Pag
 
     public async Task<PageResult<IEnumerable<CategoryResponse>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
     {
-        var response = await _categoryService.GetCategoriesAsync(request, cancellationToken);
+        var specification = new GetAllCategorySpecification(request);
+        var response = await _categoryService.GetCategoriesAsync(specification, cancellationToken);
 
         return response;
     }

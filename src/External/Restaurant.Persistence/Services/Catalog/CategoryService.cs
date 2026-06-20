@@ -1,6 +1,8 @@
 using AutoMapper;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
+using Restaurant.Application.Features.Catalog.Categories.Commands.Delete;
+using Restaurant.Application.Features.Catalog.Categories.Commands.Restore;
 using Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 using Restaurant.Application.Services.Catalog;
 using Restaurant.Contracts.DTOs.Catalog.Categories;
@@ -21,16 +23,16 @@ namespace Restaurant.Persistence.Services.Catalog
         }
 
         public async Task<PageResult<IEnumerable<CategoryResponse>>>
-            GetCategoriesAsync(GetAllCategoryQuery request, CancellationToken cancellationToken = default)
+            GetCategoriesAsync(GetAllCategorySpecification specification, CancellationToken cancellationToken = default)
         {
-            var spec = new GetAllCategorySpecification(request);
+            var page = (specification.Skip / specification.Take) + 1;
 
-            var totalItems = await _categoryRepository.CountAsync(spec, cancellationToken);
-            var categories = await _categoryRepository.GetAllAsync(spec, cancellationToken);
+            var totalItems = await _categoryRepository.CountAsync(specification, cancellationToken);
+            var categories = await _categoryRepository.GetAllAsync(specification, cancellationToken);
 
             var response = _mapper.Map<List<CategoryResponse>>(categories);
             return PageResult<IEnumerable<CategoryResponse>>
-                .Success(response, totalItems, request.Page, request.PageSize, Messages<Category>.GetAllSuccess);
+                .Success(response, totalItems, page, specification.Take, Messages<Category>.GetAllSuccess);
         }
 
         public async Task<DataResult<CategoryResponse>>
@@ -79,9 +81,9 @@ namespace Restaurant.Persistence.Services.Catalog
         }
 
         public async Task<Result> 
-            DeleteCategoryAsync(Guid id, CancellationToken cancellationToken = default)
+            DeleteCategoryAsync(DeleteCategorySpecification specification, CancellationToken cancellationToken = default)
         {
-            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+            var category = await _categoryRepository.GetByIdAsync(specification, cancellationToken);
             if (category is null)
             {
                 return Result
@@ -91,7 +93,7 @@ namespace Restaurant.Persistence.Services.Catalog
             if (category.IsDeleted)
             {
                 return Result
-                    .Fail(Messages<Category>.DeleteError, HttpStatusCode.Conflict);
+                    .Fail(Messages<Category>.AlreadyDeleted, HttpStatusCode.Conflict);
             }
 
             category.Delete();
@@ -104,9 +106,9 @@ namespace Restaurant.Persistence.Services.Catalog
         }
 
         public async Task<Result> 
-            RestoreCategoryAsync(Guid id, CancellationToken cancellationToken = default)
+            RestoreCategoryAsync(RestoreCategorySpecification specification, CancellationToken cancellationToken = default)
         {
-            var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+            var category = await _categoryRepository.GetByIdAsync(specification, cancellationToken);
             if (category is null)
             {
                 return Result
@@ -116,7 +118,7 @@ namespace Restaurant.Persistence.Services.Catalog
             if (!category.IsDeleted)
             {
                 return Result
-                    .Fail(Messages<Category>.RestoreError, HttpStatusCode.Conflict);
+                    .Fail(Messages<Category>.NotYetDeleted, HttpStatusCode.Conflict);
             }
 
             category.Restore();
