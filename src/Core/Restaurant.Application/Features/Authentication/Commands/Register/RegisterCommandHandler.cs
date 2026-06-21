@@ -12,6 +12,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
+    private readonly IPersonalInformationRepository _personalInfoRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IEmailService _emailService;
     private readonly IUnitOfWork _unitOfWork;
@@ -19,12 +20,14 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result>
     public RegisterCommandHandler(
         IUserRepository userRepository,
         IRoleRepository roleRepository,
+        IPersonalInformationRepository personalInfoRepository,
         IPasswordHasher passwordHasher,
         IEmailService emailService,
         IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
+        _personalInfoRepository = personalInfoRepository;
         _passwordHasher = passwordHasher;
         _emailService = emailService;
         _unitOfWork = unitOfWork;
@@ -44,14 +47,30 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, Result>
             return Result.Fail("Default role Customer not found.");
         }
 
+        var personalInfo = new PersonalInformation
+        {
+            FirstName = request.Request.FirstName,
+            LastName = request.Request.LastName,
+            DOB = request.Request.DOB,
+            Gender = request.Request.Gender,
+            Address = request.Request.Address,
+            City = request.Request.City,
+            Country = request.Request.Country,
+            Phone = request.Request.Phone,
+            CitizenCardId = request.Request.CitizenCardId,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await _personalInfoRepository.AddAsync(personalInfo, cancellationToken);
+
         var user = new User
         {
-            Id = Guid.NewGuid(),
             UserName = request.Request.UserName,
             Email = request.Request.Email,
             PasswordHash = _passwordHasher.HashPassword(request.Request.Password),
             IsActive = false,
             RoleId = customerRole.Id,
+            PIId = personalInfo.Id,
             CreatedAt = DateTime.UtcNow
         };
 
