@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Restaurant.Domain.Entities.Catalog;
+using Restaurant.Domain.Entities.Inventory;
 
 namespace Restaurant.Persistence.Configurations.Catalog
 {
@@ -13,14 +14,14 @@ namespace Restaurant.Persistence.Configurations.Catalog
             builder.Property(x => x.Description).HasMaxLength(1000);
 
             // Soft delete filter
-            //builder.HasQueryFilter(x => !x.IsDeleted);
+            builder.HasQueryFilter(x => !x.IsDeleted);
 
             // Relationships
             // Category relationship is already configured in CategoryConfiguration
 
             builder.HasOne(x => x.ProductStock)
                    .WithOne(x => x.Product)
-                   .HasForeignKey<Domain.Entities.Inventory.ProductStock>(x => x.ProductId)
+                   .HasForeignKey<ProductStock>(x => x.ProductId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(x => x.ProductImages)

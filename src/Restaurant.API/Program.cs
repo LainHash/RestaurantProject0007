@@ -1,5 +1,18 @@
-using Restaurant.Application.Services;
-using Restaurant.Persistence.Services;
+using Restaurant.Application;
+using Restaurant.Infrastructure;
+using Restaurant.Persistence;
+
+
+// Tìm file .env từ thư mục hiện tại, leo dần lên thư mục cha
+// → hoạt động dù chạy từ VS (bin/Debug/...) hay dotnet run (src/Restaurant.API/)
+var searchDir = Directory.GetCurrentDirectory();
+while (searchDir is not null)
+{
+    var envPath = Path.Combine(searchDir, ".env");
+    if (File.Exists(envPath)) { DotNetEnv.Env.Load(envPath); break; }
+    searchDir = Directory.GetParent(searchDir)?.FullName;
+}
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +26,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 
 var app = builder.Build();
@@ -32,6 +46,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

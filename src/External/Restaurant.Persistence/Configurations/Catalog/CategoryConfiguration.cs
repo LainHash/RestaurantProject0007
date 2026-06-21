@@ -13,7 +13,7 @@ namespace Restaurant.Persistence.Configurations.Catalog
             builder.Property(x => x.Description).HasMaxLength(500);
 
             // Soft delete filter
-            //builder.HasQueryFilter(x => !x.IsDeleted);
+            builder.HasQueryFilter(x => !x.IsDeleted);
 
             // Relationships
             builder.HasMany(x => x.Products)

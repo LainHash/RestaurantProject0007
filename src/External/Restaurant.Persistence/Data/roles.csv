@@ -1,0 +1,5 @@
+Id,Name,Description
+10000000-0000-0000-0000-000000000001,Admin,Administrator role with full system access
+10000000-0000-0000-0000-000000000002,Customer,Customer role for restaurant patrons
+10000000-0000-0000-0000-000000000003,Staff,Restaurant staff role
+10000000-0000-0000-0000-000000000004,Manager,Restaurant manager role

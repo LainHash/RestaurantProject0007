@@ -14,7 +14,8 @@ namespace Restaurant.Application.Features.Catalog.Categories.Commands.Restore
 
         public async Task<Result> Handle(RestoreCategoryCommand request, CancellationToken cancellationToken)
         {
-            return await _categoryService.RestoreCategoryAsync(request.Id, cancellationToken);
+            var specification = new RestoreCategorySpecification(request);
+            return await _categoryService.RestoreCategoryAsync(specification, cancellationToken);
         }
     }
 }

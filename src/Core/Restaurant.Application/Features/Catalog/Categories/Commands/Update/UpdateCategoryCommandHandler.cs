@@ -14,7 +14,8 @@ namespace Restaurant.Application.Features.Catalog.Categories.Commands.Update
         }
         public async Task<DataResult<CategoryResponse>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var response = await _categoryService.UpdateCategoryAsync(request.Id, request.UpdateCategoryRequest, cancellationToken);
+            var specification = new UpdateCategorySpecification(request);
+            var response = await _categoryService.UpdateCategoryAsync(specification, cancellationToken);
             return response;
         }
     }
