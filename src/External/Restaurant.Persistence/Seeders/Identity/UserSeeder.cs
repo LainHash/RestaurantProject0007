@@ -42,7 +42,7 @@ namespace Restaurant.Persistence.Seeders.Identity
                         Id = record.Id,
                         UserName = record.UserName,
                         Email = record.Email,
-                        PasswordHash = record.PasswordHash,
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword(record.PasswordHash, 12),
                         IsActive = record.IsActive,
                         PIId = record.PIId,
                         RoleId = record.RoleId,

@@ -9,8 +9,8 @@ namespace Restaurant.Persistence.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly RestaurantDbContext _context;
-        private DbSet<TEntity> Entity;
+        protected readonly RestaurantDbContext _context;
+        protected readonly DbSet<TEntity> Entity;
 
         public Repository(RestaurantDbContext context)
         {
