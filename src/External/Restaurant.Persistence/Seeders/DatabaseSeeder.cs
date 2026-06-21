@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Persistence.Contexts;
 using Restaurant.Persistence.Seeders.Catalog;
+using Restaurant.Persistence.Seeders.Customers;
+using Restaurant.Persistence.Seeders.Identity;
 
 namespace Restaurant.Persistence.Seeders
 {
@@ -17,6 +19,11 @@ namespace Restaurant.Persistence.Seeders
 
         public async Task SeedAllAsync()
         {
+            // Identity seeding: Role first, then PersonalInformation, then User, then Customer
+            await SeedAsync<Restaurant.Persistence.Seeders.Identity.RoleSeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Identity.PersonalInformationSeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Identity.UserSeeder>(_context);
+            await SeedAsync<Restaurant.Persistence.Seeders.Customers.CustomerSeeder>(_context);
 
             // Catalog seeding: Categories first (FK dependency)
             await SeedAsync<CategorySeeder>(_context);

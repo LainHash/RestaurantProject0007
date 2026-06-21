@@ -8,7 +8,7 @@ namespace Restaurant.Contracts.DTOs.Catalog.Misc
         public string AltText      { get; set; } = string.Empty;
         public bool   IsPrimary    { get; set; }
         public int    DisplayOrder { get; set; }
-        public long   FileSize     { get; set; }
+        public decimal   FileSize     { get; set; }
         public string ContentType  { get; set; } = string.Empty;
     }
 }

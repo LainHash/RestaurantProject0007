@@ -7,11 +7,8 @@ namespace Restaurant.Persistence.Repositories.Misc
 {
     public class ImageRepository : Repository<Image>, IImageRepository
     {
-        private readonly RestaurantDbContext _context;
-
         public ImageRepository(RestaurantDbContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<int> CountByProductIdAsync(Guid productId, CancellationToken cancellationToken = default)
