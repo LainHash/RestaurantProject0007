@@ -12,4 +12,5 @@
     <Project Path="src/Shared/Restaurant.Contracts/Restaurant.Contracts.csproj" />
   </Folder>
   <Project Path="src/Restaurant.API/Restaurant.API.csproj" />
+  <Project Path="src/Restaurant.BlazorApp/Restaurant.BlazorApp.csproj" Id="e1fa4087-2ea2-4538-95fd-867dbac6d2ab" />
 </Solution>
