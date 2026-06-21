@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.Features.Authentication.Commands.Login;
 using Restaurant.Application.Features.Authentication.Commands.Register;
+using Restaurant.Application.Features.Authentication.Commands.VerifyEmail;
 using Restaurant.Contracts.DTOs.Authentication;
 
 namespace Restaurant.Presentation.Controllers;
@@ -44,5 +45,19 @@ public class AuthController : ControllerBase
         }
 
         return StatusCode(StatusCodes.Status401Unauthorized, result);
+    }
+
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest request, CancellationToken cancellationToken)
+    {
+        var command = new VerifyEmailCommand(request);
+        var result = await _sender.Send(command, cancellationToken);
+
+        if (result.IsSucceed)
+        {
+            return Ok(result);
+        }
+
+        return BadRequest(result);
     }
 }

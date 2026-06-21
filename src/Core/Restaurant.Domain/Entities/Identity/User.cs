@@ -1,4 +1,4 @@
-﻿using Restaurant.Domain.Abstraction;
+using Restaurant.Domain.Abstraction;
 using Restaurant.Domain.Entities.Customers;
 
 namespace Restaurant.Domain.Entities.Identity
@@ -9,6 +9,9 @@ namespace Restaurant.Domain.Entities.Identity
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+
+        public string? VerificationCode { get; set; }
+        public DateTime? VerificationCodeExpiresAt { get; set; }
 
         public Guid PIId { get; set; }
         public Guid RoleId { get; set; }
