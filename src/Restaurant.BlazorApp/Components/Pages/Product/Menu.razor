@@ -1,239 +1,150 @@
 @page "/Menu"
+@using Restaurant.BlazorApp.Components.Shared
+@using Restaurant.BlazorApp.Services.Abstraction.Catalog
+@using Restaurant.Contracts.DTOs.Catalog.Categories
+@using Restaurant.Contracts.DTOs.Catalog.Products
+@inject ICategoryService CategoryService
+@inject IProductService ProductService
+@rendermode InteractiveServer
 
-        <!-- Page Header Start -->
-        <div class="page-header mb-0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h2>Food Menu</h2>
-                    </div>
-                    <div class="col-12">
-                        <a href="">Home</a>
-                        <a href="">Menu</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Page Header End -->
-        
-        
-        <!-- Food Start -->
-        <div class="food mt-0">
-            <div class="container">
-                <div class="row align-items-center">
+<PageHeader Page="Menu" />
+
+<!-- Food Start -->
+<div class="food mt-0">
+    <div class="container">
+        <div class="row align-items-center">
+            @if (_categories != null)
+            {
+                @foreach (var category in _categories.Take(3))
+                {
                     <div class="col-md-4">
                         <div class="food-item">
-                            <i class="flaticon-burger"></i>
-                            <h2>Burgers</h2>
+                            <!-- We can use generic icons based on category name or just a default -->
+                            <i class="@GetCategoryIcon(category.Name)"></i>
+                            <h2>@category.Name</h2>
                             <p>
-                                Lorem ipsum dolor sit amet elit. Phasel nec pretium mi. Curabit facilis ornare velit non vulputa. Aliquam metus tortor auctor quis sem. 
+                                @(string.IsNullOrWhiteSpace(category.Description) ? "Lorem ipsum dolor sit amet elit. Phasel nec pretium mi. Curabit facilis ornare velit non vulputa." : category.Description)
                             </p>
                             <a href="">View Menu</a>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="food-item">
-                            <i class="flaticon-snack"></i>
-                            <h2>Snacks</h2>
-                            <p>
-                                Lorem ipsum dolor sit amet elit. Phasel nec pretium mi. Curabit facilis ornare velit non vulputa. Aliquam metus tortor auctor quis sem. 
-                            </p>
-                            <a href="">View Menu</a>
+                }
+            }
+        </div>
+    </div>
+</div>
+<!-- Food End -->
+
+<!-- Menu Start -->
+<div class="menu">
+    <div class="container">
+        <div class="section-header text-center">
+            <p>Food Menu</p>
+            <h2>Delicious Food Menu</h2>
+        </div>
+        <div class="menu-tab">
+            <ul class="nav nav-pills justify-content-center">
+                @if (_categories != null)
+                {
+                    var isFirst = true;
+                    @foreach (var category in _categories)
+                    {
+                        var tabId = $"tab-{category.Id}";
+                        <li class="nav-item">
+                            <a class="nav-link @(isFirst ? "active" : "")" data-toggle="pill" href="#@tabId">@category.Name</a>
+                        </li>
+                        isFirst = false;
+                    }
+                }
+            </ul>
+            <div class="tab-content">
+                @if (_categories != null && _products != null)
+                {
+                    var isFirst = true;
+                    @foreach (var category in _categories)
+                    {
+                        var tabId = $"tab-{category.Id}";
+                        var categoryProducts = _products.Where(p => p.CategoryName == category.Name).ToList();
+
+                        <div id="@tabId" class="container tab-pane @(isFirst ? "active" : "fade")">
+                            <div class="row">
+                                <div class="col-lg-7 col-md-12">
+                                    @foreach (var product in categoryProducts)
+                                    {
+                                        <div class="menu-item">
+                                            <div class="menu-img">
+                                                <img src="@GetProductImageUrl(product)" alt="@product.Name">
+                                            </div>
+                                            <div class="menu-text">
+                                                <h3><span>@product.Name</span> <strong>$@product.UnitPrice.ToString("0.00")</strong></h3>
+                                                <p>@(string.IsNullOrWhiteSpace(product.Description) ? "Delicious freshly prepared meal" : product.Description)</p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-lg-5 d-none d-lg-block">
+                                    <img src="@GetCategoryImageUrl(category.Name)" alt="@category.Name">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="food-item">
-                            <i class="flaticon-cocktail"></i>
-                            <h2>Beverages</h2>
-                            <p>
-                                Lorem ipsum dolor sit amet elit. Phasel nec pretium mi. Curabit facilis ornare velit non vulputa. Aliquam metus tortor auctor quis sem. 
-                            </p>
-                            <a href="">View Menu</a>
-                        </div>
-                    </div>
-                </div>
+                        isFirst = false;
+                    }
+                }
             </div>
         </div>
-        <!-- Food End -->
+    </div>
+</div>
+<!-- Menu End -->
+
+@code {
+    private List<CategoryResponse>? _categories;
+    private List<ProductResponse>? _products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var categoryResult = await CategoryService.GetAllCategoriesAsync();
+        if (categoryResult != null && categoryResult.IsSucceed && categoryResult.Data != null)
+        {
+            _categories = categoryResult.Data.ToList();
+        }
+
+        var productResult = await ProductService.GetAllProductsAsync();
+        if (productResult != null && productResult.IsSucceed && productResult.Data != null)
+        {
+            _products = productResult.Data.ToList();
+        }
+    }
+
+    private string GetProductImageUrl(ProductResponse product)
+    {
+        if (product.PrimaryImage != null && !string.IsNullOrWhiteSpace(product.PrimaryImage.Url))
+        {
+            return product.PrimaryImage.Url;
+        }
         
+        // Dummy placeholder if no image exists
+        return "img/menu-burger.jpg";
+    }
 
-        <!-- Menu Start -->
-        <div class="menu">
-            <div class="container">
-                <div class="section-header text-center">
-                    <p>Food Menu</p>
-                    <h2>Delicious Food Menu</h2>
-                </div>
-                <div class="menu-tab">
-                    <ul class="nav nav-pills justify-content-center">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="pill" href="#burgers">Burgers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="#snacks">Snacks</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="#beverages">Beverages</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="burgers" class="container tab-pane active">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12">
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-burger.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Mini cheese Burger</span> <strong>$9.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-burger.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Double size burger</span> <strong>$11.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-burger.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Bacon, EGG and Cheese</span> <strong>$13.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-burger.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Pulled porx Burger</span> <strong>$18.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-burger.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Fried chicken Burger</span> <strong>$22.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 d-none d-lg-block">
-                                    <img src="img/menu-burger-img.jpg" alt="Image">
-                                </div>
-                            </div>
-                        </div>
-                        <div id="snacks" class="container tab-pane fade">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12">
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-snack.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Corn Tikki - Spicy fried Aloo</span> <strong>$15.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-snack.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Bread besan Toast</span> <strong>$35.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-snack.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Healthy soya nugget snacks</span> <strong>$20.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-snack.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Tandoori Soya Chunks</span> <strong>$30.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 d-none d-lg-block">
-                                    <img src="img/menu-snack-img.jpg" alt="Image">
-                                </div>
-                            </div>
-                        </div>
-                        <div id="beverages" class="container tab-pane fade">
-                            <div class="row">
-                                <div class="col-lg-7 col-md-12">
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-beverage.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Single Cup Brew</span> <strong>$7.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-beverage.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Caffe Americano</span> <strong>$9.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-beverage.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Caramel Macchiato</span> <strong>$15.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-beverage.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Standard black coffee</span> <strong>$8.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                    <div class="menu-item">
-                                        <div class="menu-img">
-                                            <img src="img/menu-beverage.jpg" alt="Image">
-                                        </div>
-                                        <div class="menu-text">
-                                            <h3><span>Standard black coffee</span> <strong>$12.00</strong></h3>
-                                            <p>Lorem ipsum dolor sit amet elit. Phasel nec preti facil</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5 d-none d-lg-block">
-                                    <img src="img/menu-beverage-img.jpg" alt="Image">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Menu End -->
+    private string GetCategoryImageUrl(string categoryName)
+    {
+        // For right-side big image based on category
+        var lowerName = categoryName.ToLower();
+        if (lowerName.Contains("burger")) return "img/menu-burger-img.jpg";
+        if (lowerName.Contains("snack")) return "img/menu-snack-img.jpg";
+        if (lowerName.Contains("beverage") || lowerName.Contains("drink")) return "img/menu-beverage-img.jpg";
+        
+        return "img/menu-burger-img.jpg";
+    }
 
-
+    private string GetCategoryIcon(string categoryName)
+    {
+        var lowerName = categoryName.ToLower();
+        if (lowerName.Contains("burger")) return "flaticon-burger";
+        if (lowerName.Contains("snack")) return "flaticon-snack";
+        if (lowerName.Contains("beverage") || lowerName.Contains("drink")) return "flaticon-cocktail";
+        if (lowerName.Contains("pizza")) return "flaticon-pizza";
+        
+        return "flaticon-burger";
+    }
+}
