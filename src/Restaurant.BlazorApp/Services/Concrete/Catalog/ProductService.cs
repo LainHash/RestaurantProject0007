@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Restaurant.BlazorApp.Common.Models.Result;
 using Restaurant.BlazorApp.Services.Abstraction;
 using Restaurant.BlazorApp.Services.Abstraction.Catalog;
@@ -21,7 +19,7 @@ namespace Restaurant.BlazorApp.Services.Concrete.Catalog
             var endpoint = "/api/products?pageSize=100";
             if (!string.IsNullOrEmpty(categoryName))
             {
-                endpoint += $"&categoryName={System.Uri.EscapeDataString(categoryName)}";
+                endpoint += $"&categoryName={Uri.EscapeDataString(categoryName)}";
             }
             return await _apiService.GetAsync<PageResult<IEnumerable<ProductResponse>>>(endpoint);
         }

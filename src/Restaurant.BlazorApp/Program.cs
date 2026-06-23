@@ -21,6 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddControllers();
+builder.Services.AddLocalization();
+
 var apiBaseUrl = Environment.GetEnvironmentVariable("WebAPI__BaseUrl") ?? "https://localhost:7006";
 
 builder.Services.AddHttpClient<IApiService, ApiService>(client =>
@@ -45,7 +48,16 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+var supportedCultures = new[] { "en-US", "vi-VN" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
 app.MapStaticAssets();
+app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
