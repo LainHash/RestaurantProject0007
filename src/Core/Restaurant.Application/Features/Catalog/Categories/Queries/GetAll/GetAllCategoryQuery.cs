@@ -5,4 +5,4 @@ using Restaurant.Contracts.DTOs.Catalog.Categories;
 
 namespace Restaurant.Application.Features.Catalog.Categories.Queries.GetAll;
 
-public record GetAllCategoryQuery() : PageQuery, IQuery<PageResult<IEnumerable<CategoryResponse>>>;
+public record GetAllCategoryQuery : PageQuery, IQuery<PageResult<IEnumerable<CategoryResponse>>>;

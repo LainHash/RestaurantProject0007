@@ -1,0 +1,29 @@
+@using Restaurant.BlazorApp.Components.Shared
+<div class="navbar navbar-expand-lg bg-light navbar-light">
+    <div class="container-fluid">
+        <a href="/" class="navbar-brand">Burger <span>King</span></a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="navbar-nav ml-auto">
+                <NavLink href="/" class="nav-item nav-link" Match="NavLinkMatch.All">@Loc["Home"]</NavLink>
+                <NavLink href="about" class="nav-item nav-link">About</NavLink>
+                <NavLink href="feature" class="nav-item nav-link">Feature</NavLink>
+                <NavLink href="team" class="nav-item nav-link">Chef</NavLink>
+                <NavLink href="menu" class="nav-item nav-link">Menu</NavLink>
+                <NavLink href="booking" class="nav-item nav-link">Booking</NavLink>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu">
+                        <NavLink href="blog" class="dropdown-item">Blog Grid</NavLink>
+                        <NavLink href="single" class="dropdown-item">Blog Detail</NavLink>
+                    </div>
+                </div>
+                <NavLink href="contact" class="nav-item nav-link">Contact</NavLink>
+                <LanguageSwitcher />
+            </div>
+        </div>
+    </div>
+</div>
