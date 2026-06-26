@@ -17,7 +17,7 @@ namespace Restaurant.Persistence.Configurations.Interior
 
             // Relationships
             builder.HasOne(x => x.Area)
-                   .WithMany()
+                   .WithMany(x => x.RestaurantTables)
                    .HasForeignKey(x => x.AreaId)
                    .OnDelete(DeleteBehavior.Restrict);
         }

@@ -21,18 +21,5 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
         RuleFor(x => x.Request.ConfirmPassword)
             .NotEmpty().WithMessage("Confirm Password is required.")
             .Equal(x => x.Request.Password).WithMessage("Confirm Password must match the Password.");
-
-        RuleFor(x => x.Request.FirstName)
-            .NotEmpty().WithMessage("First Name is required.");
-
-        RuleFor(x => x.Request.LastName)
-            .NotEmpty().WithMessage("Last Name is required.");
-
-        RuleFor(x => x.Request.Phone)
-            .NotEmpty().WithMessage("Phone number is required.")
-            .Matches(@"^\d{10,15}$").WithMessage("Phone number must be valid.");
-
-        RuleFor(x => x.Request.CitizenCardId)
-            .NotEmpty().WithMessage("Citizen Card ID is required.");
     }
 }

@@ -15,12 +15,6 @@ namespace Restaurant.Persistence.Configurations.Interior
 
             // Soft delete filter
             builder.HasQueryFilter(x => !x.IsDeleted);
-
-            // Relationships
-            builder.HasMany(x => x.RestaurantTables)
-                   .WithOne(x => x.Area)
-                   .HasForeignKey(x => x.AreaId)
-                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

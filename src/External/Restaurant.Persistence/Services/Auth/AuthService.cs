@@ -5,7 +5,9 @@ using Restaurant.Application.Abstraction.Services;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Services.Auth;
 using Restaurant.Contracts.DTOs.Authentication;
+using Restaurant.Domain.Entities.Customers;
 using Restaurant.Domain.Entities.Identity;
+using Restaurant.Domain.Repositories.Customers;
 using Restaurant.Domain.Repositories.Identity;
 
 namespace Restaurant.Persistence.Services.Auth
@@ -15,6 +17,7 @@ namespace Restaurant.Persistence.Services.Auth
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IPersonalInformationRepository _personalInfoRepository;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IEmailService _emailService;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,6 +27,7 @@ namespace Restaurant.Persistence.Services.Auth
             IUserRepository userRepository,
             IRoleRepository roleRepository,
             IPersonalInformationRepository personalInfoRepository,
+            ICustomerRepository customerRepository,
             IPasswordHasher passwordHasher,
             IEmailService emailService,
             IUnitOfWork unitOfWork,
@@ -32,6 +36,7 @@ namespace Restaurant.Persistence.Services.Auth
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _personalInfoRepository = personalInfoRepository;
+            _customerRepository = customerRepository;
             _passwordHasher = passwordHasher;
             _emailService = emailService;
             _unitOfWork = unitOfWork;
@@ -52,22 +57,6 @@ namespace Restaurant.Persistence.Services.Auth
                 return Result.Fail("Default role Customer not found.");
             }
 
-            var personalInfo = new PersonalInformation
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                DOB = request.DOB,
-                Gender = request.Gender,
-                Address = request.Address,
-                City = request.City,
-                Country = request.Country,
-                Phone = request.Phone,
-                CitizenCardId = request.CitizenCardId,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _personalInfoRepository.AddAsync(personalInfo, cancellationToken);
-
             // Generate 6-digit verification code
             var random = new Random();
             var verificationCode = random.Next(100000, 999999).ToString();
@@ -79,13 +68,23 @@ namespace Restaurant.Persistence.Services.Auth
                 PasswordHash = _passwordHasher.HashPassword(request.Password),
                 IsActive = false,
                 RoleId = customerRole.Id,
-                PIId = personalInfo.Id,
                 VerificationCode = verificationCode,
                 VerificationCodeExpiresAt = DateTime.UtcNow.AddMinutes(15),
                 CreatedAt = DateTime.UtcNow
             };
 
             await _userRepository.AddAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            // Create Customer record (PIId is null until CompleteProfile is called)
+            var customer = new Customer
+            {
+                UserId = user.Id,
+                PIId = null,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _customerRepository.AddAsync(customer, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             // Send activation email with the 6-digit code
@@ -125,7 +124,55 @@ namespace Restaurant.Persistence.Services.Auth
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Result.Success("Email verified successfully. You can now login.");
+            return Result.Success("Email verified successfully. You can now complete your profile.");
+        }
+
+        public async Task<Result> CompleteProfileAsync(CompleteProfileRequest request, CancellationToken cancellationToken = default)
+        {
+            var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+            if (user == null)
+            {
+                return Result.Fail("User not found.");
+            }
+
+            if (!user.IsActive)
+            {
+                return Result.Fail("Account is not active. Please verify your email first.");
+            }
+
+            var customer = await _customerRepository.GetByUserIdAsync(user.Id, cancellationToken);
+            if (customer == null)
+            {
+                return Result.Fail("Customer record not found.");
+            }
+
+            if (customer.PIId.HasValue)
+            {
+                return Result.Fail("Profile has already been completed.");
+            }
+
+            var personalInfo = new PersonalInformation
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                DOB = request.DOB,
+                Gender = request.Gender,
+                Address = request.Address,
+                City = request.City,
+                Country = request.Country,
+                Phone = request.Phone,
+                CitizenCardId = request.CitizenCardId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _personalInfoRepository.AddAsync(personalInfo, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            customer.PIId = personalInfo.Id;
+            _customerRepository.Update(customer);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Result.Success("Profile completed successfully.");
         }
 
         public async Task<DataResult<AuthResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
