@@ -1,11 +1,10 @@
+using Restaurant.Contracts.Common.Models;
 using Restaurant.Contracts.DTOs.Catalog.Misc;
 
 namespace Restaurant.Contracts.DTOs.Catalog.Products
 {
-    public class ProductResponse
+    public class ProductResponse : SoftDeleteDTO
     {
-        public Guid Id { get; set; }
-
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public bool IsMadeToOrder { get; set; }
@@ -20,10 +19,5 @@ namespace Restaurant.Contracts.DTOs.Catalog.Products
         public IEnumerable<ImageResponse> Images { get; set; } = Enumerable.Empty<ImageResponse>();
 
         public bool IsAvailable { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-
-        public bool IsDeleted { get; set; }
     }
 }

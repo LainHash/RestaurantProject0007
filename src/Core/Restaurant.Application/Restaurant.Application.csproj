@@ -24,6 +24,7 @@
     <Folder Include="Features\Catalog\Categories\Validators\" />
     <Folder Include="Features\Catalog\Products\Specifications\" />
     <Folder Include="Features\Catalog\Products\Validators\" />
+    <Folder Include="Features\Territory\" />
   </ItemGroup>
 
 </Project>
