@@ -35,7 +35,6 @@ namespace Restaurant.Persistence.Seeders.Identity
                         Email = record.Email,
                         PasswordHash = BCrypt.Net.BCrypt.HashPassword(record.PasswordHash, 12),
                         IsActive = record.IsActive,
-                        PIId = record.PIId,
                         RoleId = record.RoleId,
                     });
                 }
@@ -52,7 +51,6 @@ namespace Restaurant.Persistence.Seeders.Identity
             public string Email { get; set; } = string.Empty;
             public string PasswordHash { get; set; } = string.Empty;
             public bool IsActive { get; set; }
-            public Guid PIId { get; set; }
             public Guid RoleId { get; set; }
         }
     }

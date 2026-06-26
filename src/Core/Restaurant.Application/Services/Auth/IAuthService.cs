@@ -8,5 +8,6 @@ namespace Restaurant.Application.Services.Auth
         Task<Result> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
         Task<DataResult<AuthResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
         Task<Result> VerifyEmailAsync(VerifyEmailRequest request, CancellationToken cancellationToken = default);
+        Task<Result> CompleteProfileAsync(CompleteProfileRequest request, CancellationToken cancellationToken = default);
     }
 }

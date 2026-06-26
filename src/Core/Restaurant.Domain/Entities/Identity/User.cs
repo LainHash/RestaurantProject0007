@@ -12,11 +12,8 @@ namespace Restaurant.Domain.Entities.Identity
 
         public string? VerificationCode { get; set; }
         public DateTime? VerificationCodeExpiresAt { get; set; }
-
-        public Guid PIId { get; set; }
         public Guid RoleId { get; set; }
 
-        public virtual PersonalInformation PersonalInformation { get; set; } = null!;
         public virtual Customer Customer { get; set; } = null!;
         public virtual Role Role { get; set; } = null!;
     }

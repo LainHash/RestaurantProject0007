@@ -14,14 +14,24 @@ namespace Restaurant.Persistence.Configurations.Customers
             builder.Property(x => x.UserId)
                 .IsRequired();
 
+            builder.Property(x => x.PIId)
+                .IsRequired(false);
+
             // Relationships
             builder.HasOne(x => x.User)
                 .WithOne(x => x.Customer)
                 .HasForeignKey<Customer>(x => x.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.HasOne(x => x.PersonalInformation)
+                .WithMany()
+                .HasForeignKey(x => x.PIId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .IsRequired(false);
+
             // Soft delete filter
             builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }
+

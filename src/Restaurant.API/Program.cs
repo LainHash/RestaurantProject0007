@@ -1,6 +1,10 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Restaurant.API.HealthChecks;
 using Restaurant.Application;
 using Restaurant.Infrastructure;
 using Restaurant.Persistence;
+using Restaurant.Persistence.Contexts;
 
 
 // Tìm file .env từ thư mục hiện tại, leo dần lên thư mục cha
@@ -23,6 +27,18 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<RestaurantDbContext>(name: "PostgreSQL Database")
+    .AddCheck<SmtpHealthCheck>(name: "SMTP Email Service")
+    .AddCheck<CloudinaryHealthCheck>(name: "Cloudinary Image Service");
+
+builder.Services.AddHealthChecksUI(setupSettings: setup =>
+{
+    setup.AddHealthCheckEndpoint("Restaurant API", "/api/health");
+}).AddInMemoryStorage();
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
@@ -48,6 +64,27 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHealthChecks("/api/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+app.MapHealthChecksUI(options =>
+{
+    options.UIPath = "/health-ui";
+});
+
+app.MapGet("/api/routes", (IEnumerable<EndpointDataSource> endpointSources) =>
+{
+    var endpoints = endpointSources.SelectMany(es => es.Endpoints);
+    return endpoints.OfType<RouteEndpoint>().Select(e => new
+    {
+        Method = e.Metadata.OfType<HttpMethodMetadata>().FirstOrDefault()?.HttpMethods.FirstOrDefault(),
+        Route = e.RoutePattern.RawText
+    });
+});
 
 app.MapControllers();
 

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Restaurant.Domain.Entities.Territory;
 
-namespace Restaurant.Persistence.Configurations.Interior
+namespace Restaurant.Persistence.Configurations.Territory
 {
     internal class AreaConfiguration : IEntityTypeConfiguration<Area>
     {
@@ -15,12 +15,6 @@ namespace Restaurant.Persistence.Configurations.Interior
 
             // Soft delete filter
             builder.HasQueryFilter(x => !x.IsDeleted);
-
-            // Relationships
-            builder.HasMany(x => x.RestaurantTables)
-                   .WithOne(x => x.Area)
-                   .HasForeignKey(x => x.AreaId)
-                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

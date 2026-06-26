@@ -115,7 +115,6 @@ namespace Restaurant.Persistence.Migrations
                     Capacity = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     AreaId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AreaId1 = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
@@ -130,11 +129,6 @@ namespace Restaurant.Persistence.Migrations
                         principalTable: "Areas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_RestaurantTables_Areas_AreaId1",
-                        column: x => x.AreaId1,
-                        principalTable: "Areas",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -174,7 +168,6 @@ namespace Restaurant.Persistence.Migrations
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     VerificationCode = table.Column<string>(type: "text", nullable: true),
                     VerificationCodeExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    PIId = table.Column<Guid>(type: "uuid", nullable: false),
                     RoleId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -184,12 +177,6 @@ namespace Restaurant.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_PersonalInformations_PIId",
-                        column: x => x.PIId,
-                        principalTable: "PersonalInformations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleId",
                         column: x => x.RoleId,
@@ -251,6 +238,7 @@ namespace Restaurant.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PIId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
@@ -260,12 +248,23 @@ namespace Restaurant.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Customers_PersonalInformations_PIId",
+                        column: x => x.PIId,
+                        principalTable: "PersonalInformations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
                         name: "FK_Customers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_PIId",
+                table: "Customers",
+                column: "PIId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_UserId",
@@ -301,16 +300,6 @@ namespace Restaurant.Persistence.Migrations
                 column: "AreaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RestaurantTables_AreaId1",
-                table: "RestaurantTables",
-                column: "AreaId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_PIId",
-                table: "Users",
-                column: "PIId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
                 table: "Users",
                 column: "RoleId");
@@ -332,6 +321,9 @@ namespace Restaurant.Persistence.Migrations
                 name: "RestaurantTables");
 
             migrationBuilder.DropTable(
+                name: "PersonalInformations");
+
+            migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
@@ -342,9 +334,6 @@ namespace Restaurant.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Areas");
-
-            migrationBuilder.DropTable(
-                name: "PersonalInformations");
 
             migrationBuilder.DropTable(
                 name: "Roles");

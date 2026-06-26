@@ -19,7 +19,7 @@ namespace Restaurant.Persistence.Seeders.Identity
             if (!File.Exists(xlsxPath))
                 throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            var records = MiniExcel.Query<PersonalInformationExcelRecord>(xlsxPath, sheetName: "PersonalInfos").ToList();
+            var records = MiniExcel.Query<PersonalInformationExcelRecord>(xlsxPath, sheetName: "PersonalInformations").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>

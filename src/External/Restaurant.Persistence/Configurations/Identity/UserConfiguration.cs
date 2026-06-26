@@ -26,17 +26,8 @@ namespace Restaurant.Persistence.Configurations.Identity
                 .IsRequired()
                 .HasDefaultValue(true);
 
-            builder.Property(x => x.PIId)
-                .IsRequired();
-
             builder.Property(x => x.RoleId)
                 .IsRequired();
-
-            // Relationships
-            builder.HasOne(x => x.PersonalInformation)
-                .WithMany()
-                .HasForeignKey(x => x.PIId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.Role)
                 .WithMany(x => x.Users)

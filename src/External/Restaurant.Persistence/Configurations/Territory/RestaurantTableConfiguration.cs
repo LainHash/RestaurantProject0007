@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Restaurant.Domain.Entities.Territory;
 
-namespace Restaurant.Persistence.Configurations.Interior
+namespace Restaurant.Persistence.Configurations.Territory
 {
     internal class RestaurantTableConfiguration : IEntityTypeConfiguration<RestaurantTable>
     {
@@ -17,7 +17,7 @@ namespace Restaurant.Persistence.Configurations.Interior
 
             // Relationships
             builder.HasOne(x => x.Area)
-                   .WithMany()
+                   .WithMany(x => x.RestaurantTables)
                    .HasForeignKey(x => x.AreaId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
