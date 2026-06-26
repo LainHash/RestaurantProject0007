@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MiniExcelLibs;
 using Restaurant.Domain.Entities.Catalog;
 using Restaurant.Persistence.Contexts;
 
@@ -11,21 +12,14 @@ namespace Restaurant.Persistence.Seeders.Catalog
             if (await context.Products.AnyAsync())
                 return;
 
-            var csvPath = Path.Combine(
+            var xlsxPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Data", "products.csv");
+                "Data", "RestaurantData.xlsx");
 
-            if (!File.Exists(csvPath))
-                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
+            if (!File.Exists(xlsxPath))
+                throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            using var reader = new StreamReader(csvPath);
-            using var csv = new CsvHelper.CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                MissingFieldFound = null,
-            });
-
-            var records = csv.GetRecords<ProductCsvRecord>().ToList();
+            var records = MiniExcel.Query<ProductExcelRecord>(xlsxPath, sheetName: "Products").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
@@ -50,7 +44,7 @@ namespace Restaurant.Persistence.Seeders.Catalog
             });
         }
 
-        private class ProductCsvRecord
+        private class ProductExcelRecord
         {
             public Guid Id { get; set; }
             public string Name { get; set; } = string.Empty;

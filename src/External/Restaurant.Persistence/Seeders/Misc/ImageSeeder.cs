@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MiniExcelLibs;
 using Restaurant.Domain.Entities.Misc;
 using Restaurant.Persistence.Contexts;
 
@@ -11,21 +12,14 @@ namespace Restaurant.Persistence.Seeders.Misc
             if (await context.Images.AnyAsync())
                 return;
 
-            var csvPath = Path.Combine(
+            var xlsxPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Data", "images.csv");
+                "Data", "RestaurantData.xlsx");
 
-            if (!File.Exists(csvPath))
-                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
+            if (!File.Exists(xlsxPath))
+                throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            using var reader = new StreamReader(csvPath);
-            using var csv = new CsvHelper.CsvReader(reader, new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                MissingFieldFound = null,
-            });
-
-            var records = csv.GetRecords<ImageCsvRecord>().ToList();
+            var records = MiniExcel.Query<ImageExcelRecord>(xlsxPath, sheetName: "Images").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
@@ -51,7 +45,7 @@ namespace Restaurant.Persistence.Seeders.Misc
             });
         }
 
-        private class ImageCsvRecord
+        private class ImageExcelRecord
         {
             public Guid Id { get; set; }
             public string? AltText { get; set; }

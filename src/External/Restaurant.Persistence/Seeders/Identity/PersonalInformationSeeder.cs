@@ -1,9 +1,7 @@
-using CsvHelper;
-using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using MiniExcelLibs;
 using Restaurant.Domain.Entities.Identity;
 using Restaurant.Persistence.Contexts;
-using System.Globalization;
 
 namespace Restaurant.Persistence.Seeders.Identity
 {
@@ -14,21 +12,14 @@ namespace Restaurant.Persistence.Seeders.Identity
             if (await context.PersonalInformations.AnyAsync())
                 return;
 
-            var csvPath = Path.Combine(
+            var xlsxPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Data", "personal_information.csv");
+                "Data", "RestaurantData.xlsx");
 
-            if (!File.Exists(csvPath))
-                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
+            if (!File.Exists(xlsxPath))
+                throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            using var reader = new StreamReader(csvPath);
-            using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                MissingFieldFound = null,
-            });
-
-            var records = csv.GetRecords<PersonalInformationCsvRecord>().ToList();
+            var records = MiniExcel.Query<PersonalInformationExcelRecord>(xlsxPath, sheetName: "PersonalInfos").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
@@ -42,7 +33,7 @@ namespace Restaurant.Persistence.Seeders.Identity
                         Id = record.Id,
                         FirstName = record.FirstName,
                         LastName = record.LastName,
-                        DOB = record.DOB,
+                        DOB = DateOnly.FromDateTime(record.DOB),
                         Gender = record.Gender,
                         Address = record.Address,
                         City = record.City,
@@ -53,17 +44,16 @@ namespace Restaurant.Persistence.Seeders.Identity
                 }
 
                 await context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
             });
         }
 
-        private class PersonalInformationCsvRecord
+        private class PersonalInformationExcelRecord
         {
             public Guid Id { get; set; }
             public string FirstName { get; set; } = string.Empty;
             public string LastName { get; set; } = string.Empty;
-            public DateOnly DOB { get; set; }
+            public DateTime DOB { get; set; }
             public bool Gender { get; set; }
             public string Address { get; set; } = string.Empty;
             public string City { get; set; } = string.Empty;

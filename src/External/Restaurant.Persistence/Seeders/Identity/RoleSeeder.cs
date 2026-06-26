@@ -1,9 +1,7 @@
-using CsvHelper;
-using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using MiniExcelLibs;
 using Restaurant.Domain.Entities.Identity;
 using Restaurant.Persistence.Contexts;
-using System.Globalization;
 
 namespace Restaurant.Persistence.Seeders.Identity
 {
@@ -14,21 +12,14 @@ namespace Restaurant.Persistence.Seeders.Identity
             if (await context.Roles.AnyAsync())
                 return;
 
-            var csvPath = Path.Combine(
+            var xlsxPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Data", "roles.csv");
+                "Data", "RestaurantData.xlsx");
 
-            if (!File.Exists(csvPath))
-                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
+            if (!File.Exists(xlsxPath))
+                throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            using var reader = new StreamReader(csvPath);
-            using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                MissingFieldFound = null,
-            });
-
-            var records = csv.GetRecords<RoleCsvRecord>().ToList();
+            var records = MiniExcel.Query<RoleExcelRecord>(xlsxPath, sheetName: "Roles").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
@@ -46,12 +37,11 @@ namespace Restaurant.Persistence.Seeders.Identity
                 }
 
                 await context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
             });
         }
 
-        private class RoleCsvRecord
+        private class RoleExcelRecord
         {
             public Guid Id { get; set; }
             public string Name { get; set; } = string.Empty;

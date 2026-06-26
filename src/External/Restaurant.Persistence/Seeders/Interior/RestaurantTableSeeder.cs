@@ -1,9 +1,7 @@
-using CsvHelper;
-using CsvHelper.Configuration;
 using Microsoft.EntityFrameworkCore;
+using MiniExcelLibs;
 using Restaurant.Domain.Entities.Interior;
 using Restaurant.Persistence.Contexts;
-using System.Globalization;
 
 namespace Restaurant.Persistence.Seeders.Interior
 {
@@ -14,21 +12,14 @@ namespace Restaurant.Persistence.Seeders.Interior
             if (await context.RestaurantTables.AnyAsync())
                 return;
 
-            var csvPath = Path.Combine(
+            var xlsxPath = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
-                "Data", "restaurant_tables.csv");
+                "Data", "RestaurantData.xlsx");
 
-            if (!File.Exists(csvPath))
-                throw new FileNotFoundException($"Seed data file not found: {csvPath}");
+            if (!File.Exists(xlsxPath))
+                throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            using var reader = new StreamReader(csvPath);
-            using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = true,
-                MissingFieldFound = null,
-            });
-
-            var records = csv.GetRecords<RestaurantTableCsvRecord>().ToList();
+            var records = MiniExcel.Query<RestaurantTableExcelRecord>(xlsxPath, sheetName: "RestaurantTables").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
@@ -48,12 +39,11 @@ namespace Restaurant.Persistence.Seeders.Interior
                 }
 
                 await context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
             });
         }
 
-        private class RestaurantTableCsvRecord
+        private class RestaurantTableExcelRecord
         {
             public Guid Id { get; set; }
             public string TableNumber { get; set; } = string.Empty;
