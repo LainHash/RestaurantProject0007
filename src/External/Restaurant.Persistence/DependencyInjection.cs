@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Restaurant.Application.Services;
 using Restaurant.Application.Services.Auth;
 using Restaurant.Application.Services.Catalog;
+using Restaurant.Application.Services.Territory;
 using Restaurant.Domain.Repositories;
 using Restaurant.Persistence.Contexts;
 using Restaurant.Persistence.Repositories;
@@ -12,6 +13,7 @@ using Restaurant.Persistence.Seeders;
 using Restaurant.Persistence.Services;
 using Restaurant.Persistence.Services.Auth;
 using Restaurant.Persistence.Services.Catalog;
+using Restaurant.Persistence.Services.Territory;
 
 namespace Restaurant.Persistence
 {
@@ -75,6 +77,8 @@ namespace Restaurant.Persistence
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAreaService, AreaService>();
+            services.AddScoped<IRestaurantTableService, RestaurantTableService>();
 
             return services;
         }

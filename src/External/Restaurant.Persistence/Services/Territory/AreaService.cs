@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
@@ -23,10 +23,10 @@ namespace Restaurant.Persistence.Services.Territory
         public async Task<DataResult<List<AreaResponse>>> 
             GetAreasAsync(CancellationToken cancellationToken)
         {
-            var categories = _areaRepository.GetAllAsync(cancellationToken)
+            var areas = await _areaRepository.GetAllAsync(cancellationToken)
                 .ToListAsync();
 
-            var response = _mapper.Map<List<AreaResponse>>(categories);
+            var response = _mapper.Map<List<AreaResponse>>(areas);
             return DataResult<List<AreaResponse>>
                 .Success(response, Messages<Area>.GetAllSuccess, HttpStatusCode.OK);
         }
