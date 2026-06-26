@@ -1,3 +1,4 @@
+using DotNetEnv;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Restaurant.API.HealthChecks;
@@ -6,6 +7,8 @@ using Restaurant.Infrastructure;
 using Restaurant.Persistence;
 using Restaurant.Persistence.Contexts;
 
+Env.Load();
+
 
 // Tìm file .env từ thư mục hiện tại, leo dần lên thư mục cha
 // → hoạt động dù chạy từ VS (bin/Debug/...) hay dotnet run (src/Restaurant.API/)
@@ -13,7 +16,7 @@ var searchDir = Directory.GetCurrentDirectory();
 while (searchDir is not null)
 {
     var envPath = Path.Combine(searchDir, ".env");
-    if (File.Exists(envPath)) { DotNetEnv.Env.Load(envPath); break; }
+    if (File.Exists(envPath)) {Env.Load(envPath); break; }
     searchDir = Directory.GetParent(searchDir)?.FullName;
 }
 
@@ -44,8 +47,21 @@ builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder
+            .WithOrigins(Env.GetString("WebClientUrl"))
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -60,7 +76,8 @@ using (var scope = app.Services.CreateScope())
     await scope.ServiceProvider.InitialiseDatabaseAsync();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
+
 
 app.UseAuthentication();
 app.UseAuthorization();
