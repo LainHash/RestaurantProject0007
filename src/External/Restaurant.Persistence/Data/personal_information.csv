@@ -1,6 +1,0 @@
-Id,FirstName,LastName,DOB,Gender,Address,City,Country,Phone,CitizenCardId
-550e8400-e29b-41d4-a716-446655440001,Nguyễn,Văn A,1990-05-15,true,123 Nguyễn Hue Blvd,Ho Chi Minh City,Vietnam,0901234567,001092000001
-550e8400-e29b-41d4-a716-446655440002,Trần,Thị B,1992-08-22,false,456 Lê Lợi Street,Hanoi,Vietnam,0912345678,001092000002
-550e8400-e29b-41d4-a716-446655440003,Phạm,Văn C,1995-03-10,true,789 Tran Hung Dao Ave,Da Nang,Vietnam,0923456789,001092000003
-550e8400-e29b-41d4-a716-446655440004,Hoàng,Thị D,1998-11-05,false,321 Pasteur Street,Ho Chi Minh City,Vietnam,0934567890,001092000004
-550e8400-e29b-41d4-a716-446655440005,Vũ,Văn E,1988-07-20,true,654 Dong Khoi Street,Ho Chi Minh City,Vietnam,0945678901,001092000005

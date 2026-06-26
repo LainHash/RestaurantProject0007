@@ -1,16 +1,15 @@
-using MiniExcelLibs;
 using Microsoft.EntityFrameworkCore;
-using Restaurant.Domain.Entities.Catalog;
+using MiniExcelLibs;
+using Restaurant.Domain.Entities.Interior;
 using Restaurant.Persistence.Contexts;
-using System.Globalization;
 
-namespace Restaurant.Persistence.Seeders.Catalog
+namespace Restaurant.Persistence.Seeders.Interior
 {
-    internal class CategorySeeder : IDataSeeder
+    internal class AreaSeeder : IDataSeeder
     {
         public async Task SeedAsync(RestaurantDbContext context)
         {
-            if (await context.Categories.AnyAsync())
+            if (await context.Areas.AnyAsync())
                 return;
 
             var xlsxPath = Path.Combine(
@@ -20,7 +19,7 @@ namespace Restaurant.Persistence.Seeders.Catalog
             if (!File.Exists(xlsxPath))
                 throw new FileNotFoundException($"Seed data file not found: {xlsxPath}");
 
-            var records = MiniExcel.Query<CategoryExcelRecord>(xlsxPath, sheetName: "Categories").ToList();
+            var records = MiniExcel.Query<AreaExcelRecord>(xlsxPath, sheetName: "Areas").ToList();
 
             var strategy = context.Database.CreateExecutionStrategy();
             await strategy.ExecuteAsync(async () =>
@@ -29,25 +28,26 @@ namespace Restaurant.Persistence.Seeders.Catalog
 
                 foreach (var record in records)
                 {
-                    context.Categories.Add(new Category
+                    context.Areas.Add(new Area
                     {
                         Id = record.Id,
                         Name = record.Name,
                         Description = record.Description ?? string.Empty,
+                        Status = record.Status
                     });
                 }
 
                 await context.SaveChangesAsync();
-
                 await transaction.CommitAsync();
             });
         }
 
-        private class CategoryExcelRecord
+        private class AreaExcelRecord
         {
             public Guid Id { get; set; }
             public string Name { get; set; } = string.Empty;
             public string? Description { get; set; }
+            public string Status { get; set; } = string.Empty;
         }
     }
 }
