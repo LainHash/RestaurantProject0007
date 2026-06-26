@@ -1,6 +1,6 @@
 ﻿using Restaurant.Domain.Abstraction;
 
-namespace Restaurant.Domain.Entities.TableManagement
+namespace Restaurant.Domain.Entities.Interior
 {
     public class RestaurantTable : SoftDeleteEntity
     {

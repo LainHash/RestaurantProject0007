@@ -1,6 +1,6 @@
-﻿using Restaurant.Domain.Abstraction;
+using Restaurant.Domain.Abstraction;
 
-namespace Restaurant.Domain.Entities.TableManagement
+namespace Restaurant.Domain.Entities.Interior
 {
     public class Area : SoftDeleteEntity
     {
@@ -8,6 +8,6 @@ namespace Restaurant.Domain.Entities.TableManagement
         public string? Description { get; set; }
         public string Status { get; set; } = string.Empty;
 
-        public virtual RestaurantTable RestaurantTable { get; set; } = null!;
+        public virtual ICollection<RestaurantTable> RestaurantTables { get; set; } = new List<RestaurantTable>();
     }
 }
