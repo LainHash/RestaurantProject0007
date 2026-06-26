@@ -3,7 +3,7 @@ using Restaurant.Persistence.Contexts;
 using Restaurant.Persistence.Seeders.Catalog;
 using Restaurant.Persistence.Seeders.Customers;
 using Restaurant.Persistence.Seeders.Identity;
-using Restaurant.Persistence.Seeders.Interior;
+using Restaurant.Persistence.Seeders.Territory;
 using Restaurant.Persistence.Seeders.Inventory;
 using Restaurant.Persistence.Seeders.Misc;
 

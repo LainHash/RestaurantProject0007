@@ -4,7 +4,7 @@ using Restaurant.Domain.Entities.Customers;
 using Restaurant.Domain.Entities.Identity;
 using Restaurant.Domain.Entities.Inventory;
 using Restaurant.Domain.Entities.Misc;
-using Restaurant.Domain.Entities.Interior;
+using Restaurant.Domain.Entities.Territory;
 using System.Reflection;
 
 namespace Restaurant.Persistence.Contexts
