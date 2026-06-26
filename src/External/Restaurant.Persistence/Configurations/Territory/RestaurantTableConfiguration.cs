@@ -1,24 +1,23 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurant.Domain.Entities.Interior;
+using Restaurant.Domain.Entities.Territory;
 
 namespace Restaurant.Persistence.Configurations.Interior
 {
-    internal class AreaConfiguration : IEntityTypeConfiguration<Area>
+    internal class RestaurantTableConfiguration : IEntityTypeConfiguration<RestaurantTable>
     {
-        public void Configure(EntityTypeBuilder<Area> builder)
+        public void Configure(EntityTypeBuilder<RestaurantTable> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
-            builder.Property(x => x.Description).HasMaxLength(500);
+            builder.Property(x => x.TableNumber).IsRequired().HasMaxLength(50);
             builder.Property(x => x.Status).IsRequired().HasMaxLength(50);
 
             // Soft delete filter
             builder.HasQueryFilter(x => !x.IsDeleted);
 
             // Relationships
-            builder.HasMany(x => x.RestaurantTables)
-                   .WithOne(x => x.Area)
+            builder.HasOne(x => x.Area)
+                   .WithMany()
                    .HasForeignKey(x => x.AreaId)
                    .OnDelete(DeleteBehavior.Restrict);
         }
