@@ -1,7 +1,7 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
+using Restaurant.Application.Features.Territory.Areas.Queries.GetAll;
 using Restaurant.Application.Services.Territory;
 using Restaurant.Contracts.DTOs.Territory.Areas;
 using Restaurant.Domain.Entities.Territory;
@@ -20,14 +20,14 @@ namespace Restaurant.Persistence.Services.Territory
             _mapper = mapper;
         }
 
-        public async Task<DataResult<List<AreaResponse>>> 
-            GetAreasAsync(CancellationToken cancellationToken)
+        public async Task<DataResult<IEnumerable<AreaResponse>>>
+            GetAreasAsync(GetAllAreaSpecification specification, CancellationToken cancellationToken)
         {
-            var areas = await _areaRepository.GetAllAsync(cancellationToken)
-                .ToListAsync();
+            var areas = await _areaRepository.GetAllAsync(specification, cancellationToken);
 
-            var response = _mapper.Map<List<AreaResponse>>(areas);
-            return DataResult<List<AreaResponse>>
+            var response = _mapper.Map<IEnumerable<AreaResponse>>(areas);
+
+            return DataResult<IEnumerable<AreaResponse>>
                 .Success(response, Messages<Area>.GetAllSuccess, HttpStatusCode.OK);
         }
     }

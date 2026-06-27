@@ -4,5 +4,8 @@ using Restaurant.Contracts.DTOs.Territory.Areas;
 
 namespace Restaurant.Application.Features.Territory.Areas.Queries.GetAll
 {
-    public record GetAllAreaQuery : IQuery<DataResult<List<AreaResponse>>>;
+    public record GetAllAreaQuery : IQuery<DataResult<IEnumerable<AreaResponse>>>
+    {
+        public string? AreaType { get; set; }
+    }
 }
