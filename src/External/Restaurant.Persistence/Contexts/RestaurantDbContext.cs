@@ -5,6 +5,7 @@ using Restaurant.Domain.Entities.Identity;
 using Restaurant.Domain.Entities.Inventory;
 using Restaurant.Domain.Entities.Misc;
 using Restaurant.Domain.Entities.Territory;
+using Restaurant.Domain.Entities.Production;
 using System.Reflection;
 
 namespace Restaurant.Persistence.Contexts
@@ -30,6 +31,9 @@ namespace Restaurant.Persistence.Contexts
 
         public DbSet<Area> Areas { get; set; } = null!;
         public DbSet<RestaurantTable> RestaurantTables { get; set; } = null!;
+
+        public DbSet<Reservation> Reservations { get; set; } = null!;
+        public DbSet<TemporaryContact> TemporaryContacts { get; set; } = null!;
 
         // ── Model building ──────────────────────────────────────────────────
         protected override void OnModelCreating(ModelBuilder modelBuilder)
