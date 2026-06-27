@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Restaurant.Persistence.Contexts;
@@ -11,9 +12,11 @@ using Restaurant.Persistence.Contexts;
 namespace Restaurant.Persistence.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260627045804_SuaPIId")]
+    partial class SuaPIId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,86 +380,6 @@ namespace Restaurant.Persistence.Migrations
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Entities.Misc.TemporaryContact", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("GuestEmai")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("GuestName")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<string>("GuestPhone")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TemporaryContacts");
-                });
-
-            modelBuilder.Entity("Restaurant.Domain.Entities.Production.Reservation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<int>("NumberOfGuests")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("ReservationTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("RestaurantTableId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<Guid?>("TemporaryContactId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("RestaurantTableId");
-
-                    b.HasIndex("TemporaryContactId")
-                        .IsUnique();
-
-                    b.ToTable("Reservations");
-                });
-
             modelBuilder.Entity("Restaurant.Domain.Entities.Territory.Area", b =>
                 {
                     b.Property<Guid>("Id")
@@ -612,31 +535,6 @@ namespace Restaurant.Persistence.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Entities.Production.Reservation", b =>
-                {
-                    b.HasOne("Restaurant.Domain.Entities.Customers.Customer", "Customer")
-                        .WithMany("Reservations")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Restaurant.Domain.Entities.Territory.RestaurantTable", "RestaurantTable")
-                        .WithMany("Reservations")
-                        .HasForeignKey("RestaurantTableId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Restaurant.Domain.Entities.Misc.TemporaryContact", "TemporaryContact")
-                        .WithOne("Reservation")
-                        .HasForeignKey("Restaurant.Domain.Entities.Production.Reservation", "TemporaryContactId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("RestaurantTable");
-
-                    b.Navigation("TemporaryContact");
-                });
-
             modelBuilder.Entity("Restaurant.Domain.Entities.Territory.RestaurantTable", b =>
                 {
                     b.HasOne("Restaurant.Domain.Entities.Territory.Area", "Area")
@@ -661,11 +559,6 @@ namespace Restaurant.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Entities.Customers.Customer", b =>
-                {
-                    b.Navigation("Reservations");
-                });
-
             modelBuilder.Entity("Restaurant.Domain.Entities.Identity.Role", b =>
                 {
                     b.Navigation("Users");
@@ -682,20 +575,9 @@ namespace Restaurant.Persistence.Migrations
                     b.Navigation("ProductImages");
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Entities.Misc.TemporaryContact", b =>
-                {
-                    b.Navigation("Reservation")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Restaurant.Domain.Entities.Territory.Area", b =>
                 {
                     b.Navigation("RestaurantTables");
-                });
-
-            modelBuilder.Entity("Restaurant.Domain.Entities.Territory.RestaurantTable", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

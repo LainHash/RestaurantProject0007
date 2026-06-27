@@ -22,8 +22,10 @@ namespace Restaurant.Application.Features.Catalog.Products.Queries.GetAll
 
             if (hasKeyword && hasCategoryName)
             {
-                Criteria = p => p.Name.Contains(request.Keyword!) &&
-                                p.Category.Name.Contains(request.CategoryName!);
+                Criteria = p => p.Name.ToLower()
+                                .Contains(request.Keyword!.ToLower()) &&
+                                p.Category.Name.ToLower()
+                                .Contains(request.CategoryName!.ToLower());
             }
             else if (hasKeyword)
             {

@@ -32,6 +32,7 @@ namespace Restaurant.Persistence.Seeders.Customers
                     {
                         Id = record.Id,
                         UserId = record.UserId,
+                        PIId = record.PIId,
                     });
                 }
 
@@ -44,6 +45,7 @@ namespace Restaurant.Persistence.Seeders.Customers
         {
             public Guid Id { get; set; }
             public Guid UserId { get; set; }
+            public Guid PIId { get; set; }
         }
     }
 }

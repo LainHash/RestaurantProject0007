@@ -5,7 +5,7 @@ using Restaurant.Contracts.DTOs.Territory.Areas;
 
 namespace Restaurant.Application.Features.Territory.Areas.Queries.GetAll
 {
-    public class GetAllAreaQueryHandler : IQueryHandler<GetAllAreaQuery, DataResult<List<AreaResponse>>>
+    public class GetAllAreaQueryHandler : IQueryHandler<GetAllAreaQuery, DataResult<IEnumerable<AreaResponse>>>
     {
         private readonly IAreaService _areaService;
         public GetAllAreaQueryHandler(IAreaService areaService)
@@ -13,9 +13,10 @@ namespace Restaurant.Application.Features.Territory.Areas.Queries.GetAll
             _areaService = areaService;
         }
 
-        public async Task<DataResult<List<AreaResponse>>> Handle(GetAllAreaQuery request, CancellationToken cancellationToken)
+        public async Task<DataResult<IEnumerable<AreaResponse>>> Handle(GetAllAreaQuery request, CancellationToken cancellationToken)
         {
-            var response = await _areaService.GetAreasAsync(cancellationToken);
+            var specification = new GetAllAreaSpecification(request);
+            var response = await _areaService.GetAreasAsync(specification, cancellationToken);
             return response;
         }
     }

@@ -1,5 +1,6 @@
 using Restaurant.Domain.Abstraction;
 using Restaurant.Domain.Entities.Identity;
+using Restaurant.Domain.Entities.Production;
 
 namespace Restaurant.Domain.Entities.Customers
 {
@@ -10,5 +11,6 @@ namespace Restaurant.Domain.Entities.Customers
 
         public virtual User User { get; set; } = null!;
         public virtual PersonalInformation? PersonalInformation { get; set; }
+        public virtual IEnumerable<Reservation> Reservations { get; set; } = Enumerable.Empty<Reservation>();
     }
 }

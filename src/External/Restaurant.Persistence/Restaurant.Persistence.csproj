@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Configurations\Catalog\" />
+    <Folder Include="Configurations\Production\" />
     <Folder Include="Seeders\Identity\" />
     <Folder Include="Seeders\Customers\" />
     <Folder Include="Seeders\Employees\" />

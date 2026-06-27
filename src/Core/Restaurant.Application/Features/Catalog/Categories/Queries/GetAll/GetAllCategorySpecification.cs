@@ -11,7 +11,8 @@ namespace Restaurant.Application.Features.Catalog.Categories.Queries.GetAll
             // Criteria: filter theo Keyword (tên category)
             if (!string.IsNullOrWhiteSpace(request.Keyword))
             {
-                Criteria = c => c.Name.Contains(request.Keyword);
+                Criteria = c => c.Name.ToLower()
+                                    .Contains(request.Keyword.ToLower());
             }
 
             // OrderBy: sắp xếp theo SortBy
