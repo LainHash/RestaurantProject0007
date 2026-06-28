@@ -7,6 +7,10 @@ namespace Restaurant.Application.Features.Production.Reservations.Queries.GetAll
     {
         public GetAllReservationSpecification(GetAllReservationQuery request)
         {
+            AddInclude(r => r.TemporaryContact!);
+            AddInclude(r => r.Customer!);
+            AddInclude(r => r.RestaurantTable);
+
             AddIgnoreQueryFilters();
         }
     }

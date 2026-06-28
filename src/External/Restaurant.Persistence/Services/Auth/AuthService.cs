@@ -178,19 +178,16 @@ namespace Restaurant.Persistence.Services.Auth
         public async Task<DataResult<AuthResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
         {
             var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
-            if (user == null)
+            if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
             {
-                return DataResult<AuthResponse>.Fail("Invalid email or password.", HttpStatusCode.Unauthorized);
-            }
-
-            if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
-            {
-                return DataResult<AuthResponse>.Fail("Invalid email or password.", HttpStatusCode.Unauthorized);
+                return DataResult<AuthResponse>
+                    .Fail("Invalid email or password.", HttpStatusCode.Unauthorized);
             }
 
             if (!user.IsActive)
             {
-                return DataResult<AuthResponse>.Fail("Account is not active. Please verify your email.", HttpStatusCode.Forbidden);
+                return DataResult<AuthResponse>
+                    .Fail("Account is not active. Please verify your email.", HttpStatusCode.Forbidden);
             }
 
             var role = await _roleRepository.GetByIdAsync(user.RoleId, cancellationToken);
@@ -206,7 +203,8 @@ namespace Restaurant.Persistence.Services.Auth
                 Token = token
             };
 
-            return DataResult<AuthResponse>.Success(response, "Login successful.");
+            return DataResult<AuthResponse>
+                .Success(response, "Login successful.");
         }
     }
 }
