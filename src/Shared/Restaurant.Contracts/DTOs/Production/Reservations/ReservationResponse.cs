@@ -1,9 +1,9 @@
 ﻿using Restaurant.Contracts.Common.Models;
-using Restaurant.Contracts.DTOs.Customers;
+using Restaurant.Contracts.DTOs.Guests.Customers;
 using Restaurant.Contracts.DTOs.Misc;
 using Restaurant.Contracts.DTOs.Territory.RestaurantTables;
 
-namespace Restaurant.Contracts.DTOs.Production
+namespace Restaurant.Contracts.DTOs.Production.Reservations
 {
     public class ReservationResponse : SoftDeleteDTO
     {

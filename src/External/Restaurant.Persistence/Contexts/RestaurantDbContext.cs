@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Restaurant.Domain.Entities.Catalog;
-using Restaurant.Domain.Entities.Customers;
 using Restaurant.Domain.Entities.Identity;
 using Restaurant.Domain.Entities.Inventory;
 using Restaurant.Domain.Entities.Misc;
 using Restaurant.Domain.Entities.Territory;
 using Restaurant.Domain.Entities.Production;
 using System.Reflection;
+using Restaurant.Domain.Entities.Guests;
 
 namespace Restaurant.Persistence.Contexts
 {

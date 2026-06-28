@@ -1,9 +1,9 @@
 ﻿using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Messaging;
 using Restaurant.Application.Services.Production;
-using Restaurant.Contracts.DTOs.Production;
+using Restaurant.Contracts.DTOs.Production.Reservations;
 
-namespace Restaurant.Application.Features.Production.Reservations
+namespace Restaurant.Application.Features.Production.Reservations.Queries.GetAll
 {
     public class GetAllReservationQueryHandler : IQueryHandler<GetAllReservationQuery, DataResult<IEnumerable<ReservationResponse>>>
     {

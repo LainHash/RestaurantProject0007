@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Restaurant.Contracts.DTOs.Production;
+using Restaurant.Contracts.DTOs.Production.Reservations;
 using Restaurant.Domain.Entities.Production;
 
 namespace Restaurant.Persistence.Mapping.Production

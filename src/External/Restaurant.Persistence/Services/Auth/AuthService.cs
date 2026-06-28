@@ -5,10 +5,10 @@ using Restaurant.Application.Abstraction.Services;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Services.Auth;
 using Restaurant.Contracts.DTOs.Authentication;
-using Restaurant.Domain.Entities.Customers;
 using Restaurant.Domain.Entities.Identity;
 using Restaurant.Domain.Repositories.Customers;
 using Restaurant.Domain.Repositories.Identity;
+using Restaurant.Domain.Entities.Guests;
 
 namespace Restaurant.Persistence.Services.Auth
 {

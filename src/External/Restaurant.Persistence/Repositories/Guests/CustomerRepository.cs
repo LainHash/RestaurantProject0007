@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Restaurant.Domain.Entities.Customers;
+using Restaurant.Domain.Entities.Guests;
 using Restaurant.Domain.Repositories.Customers;
 using Restaurant.Persistence.Contexts;
-using Restaurant.Persistence.Repositories;
 
-namespace Restaurant.Persistence.Repositories.Customers;
+namespace Restaurant.Persistence.Repositories.Guests;
 
 public class CustomerRepository : Repository<Customer>, ICustomerRepository
 {

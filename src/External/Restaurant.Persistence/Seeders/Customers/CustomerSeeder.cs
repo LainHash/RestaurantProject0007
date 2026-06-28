@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MiniExcelLibs;
-using Restaurant.Domain.Entities.Customers;
+using Restaurant.Domain.Entities.Guests;
 using Restaurant.Persistence.Contexts;
 
 namespace Restaurant.Persistence.Seeders.Customers

@@ -2,7 +2,7 @@ using Restaurant.Domain.Abstraction;
 using Restaurant.Domain.Entities.Identity;
 using Restaurant.Domain.Entities.Production;
 
-namespace Restaurant.Domain.Entities.Customers
+namespace Restaurant.Domain.Entities.Guests
 {
     public class Customer : SoftDeleteEntity
     {

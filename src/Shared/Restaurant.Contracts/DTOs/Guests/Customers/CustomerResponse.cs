@@ -1,6 +1,6 @@
 ﻿using Restaurant.Contracts.Common.Models;
 
-namespace Restaurant.Contracts.DTOs.Customers
+namespace Restaurant.Contracts.DTOs.Guests.Customers
 {
     public class CustomerResponse : SoftDeleteDTO
     {

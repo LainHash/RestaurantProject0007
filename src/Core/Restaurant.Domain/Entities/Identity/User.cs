@@ -1,5 +1,5 @@
 using Restaurant.Domain.Abstraction;
-using Restaurant.Domain.Entities.Customers;
+using Restaurant.Domain.Entities.Guests;
 
 namespace Restaurant.Domain.Entities.Identity
 {
