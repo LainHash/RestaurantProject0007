@@ -1,4 +1,4 @@
-using Restaurant.Domain.Entities.Customers;
+using Restaurant.Domain.Entities.Guests;
 
 namespace Restaurant.Domain.Repositories.Customers;
 

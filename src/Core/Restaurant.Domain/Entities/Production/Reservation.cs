@@ -1,5 +1,5 @@
 ﻿using Restaurant.Domain.Abstraction;
-using Restaurant.Domain.Entities.Customers;
+using Restaurant.Domain.Entities.Guests;
 using Restaurant.Domain.Entities.Misc;
 using Restaurant.Domain.Entities.Territory;
 

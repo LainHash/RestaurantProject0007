@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Restaurant.Domain.Entities.Customers;
+using Restaurant.Domain.Entities.Guests;
 using Restaurant.Domain.Entities.Identity;
 
-namespace Restaurant.Persistence.Configurations.Customers
+namespace Restaurant.Persistence.Configurations.Guests
 {
     internal class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
