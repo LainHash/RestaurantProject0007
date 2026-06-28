@@ -6,28 +6,29 @@ namespace Restaurant.Application.Features.Production.Reservations.Commands.Creat
     {
         public CreateReservationValidator()
         {
-            When(x => x.CreateReservationRequest.CustomerId.HasValue, () =>
+            // Kiểm tra UserId (người dùng đã đăng nhập có token)
+            When(x => x.UserId.HasValue, () =>
             {
                 RuleFor(x => x.CreateReservationRequest.GuestName)
-                    .Empty().WithMessage("Guest name must be empty when Customer Id is provided.");
-                
-                RuleFor(x => x.CreateReservationRequest.GuestEmail)
-                    .Empty().WithMessage("Guest email must be empty when Customer Id is provided.");
-                
-                RuleFor(x => x.CreateReservationRequest.GuestPhone)
-                    .Empty().WithMessage("Guest phone must be empty when Customer Id is provided.");
-            });
+                    .Empty().WithMessage("Guest name must be empty when user is authenticated.");
 
-            When(x => !x.CreateReservationRequest.CustomerId.HasValue, () =>
+                RuleFor(x => x.CreateReservationRequest.GuestEmail)
+                    .Empty().WithMessage("Guest email must be empty when user is authenticated.");
+
+                RuleFor(x => x.CreateReservationRequest.GuestPhone)
+                    .Empty().WithMessage("Guest phone must be empty when user is authenticated.");
+            });
+            // Kiểm tra khi không có UserId (khách vãng lai, không có token)
+            When(x => !x.UserId.HasValue, () =>
             {
                 RuleFor(x => x.CreateReservationRequest.GuestName)
-                    .NotEmpty().WithMessage("Guest name is required when Customer Id is not provided.");
-                
+                    .NotEmpty().WithMessage("Guest name is required when user is not authenticated.");
+
                 RuleFor(x => x.CreateReservationRequest.GuestEmail)
-                    .NotEmpty().WithMessage("Guest email is required when Customer Id is not provided.");
-                
+                    .NotEmpty().WithMessage("Guest email is required when user is not authenticated.");
+
                 RuleFor(x => x.CreateReservationRequest.GuestPhone)
-                    .NotEmpty().WithMessage("Guest phone is required when Customer Id is not provided.");
+                    .NotEmpty().WithMessage("Guest phone is required when user is not authenticated.");
             });
         }
     }

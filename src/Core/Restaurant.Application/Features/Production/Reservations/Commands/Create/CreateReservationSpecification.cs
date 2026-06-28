@@ -6,10 +6,12 @@ namespace Restaurant.Application.Features.Production.Reservations.Commands.Creat
 {
     public class CreateReservationSpecification : BaseSpecification<Reservation>
     {
+        public Guid? UserId { get; set; }
         public CreateReservationRequest RequestBody { get; set; }
         public CreateReservationSpecification(CreateReservationCommand request)
         {
             RequestBody = request.CreateReservationRequest;
+            UserId = request.UserId;
         }
     }
 }
