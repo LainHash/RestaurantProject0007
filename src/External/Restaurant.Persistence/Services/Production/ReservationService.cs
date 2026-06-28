@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
+using Restaurant.Application.Features.Catalog.Categories.Commands.Create;
+using Restaurant.Application.Features.Production.Reservations.Commands.Create;
 using Restaurant.Application.Features.Production.Reservations.Queries.GetAll;
 using Restaurant.Application.Features.Production.Reservations.Queries.GetAllByWeek;
 using Restaurant.Application.Services.Production;
@@ -41,7 +43,8 @@ namespace Restaurant.Persistence.Services.Production
                 .Success(response, Messages<Reservation>.GetAllSuccess, HttpStatusCode.OK);
         }
 
-        public Task<DataResult<ReservationResponse>> CreateReservationAsync()
+        public Task<DataResult<ReservationResponse>> 
+            CreateReservationAsync(CreateReservationSpecification specification, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

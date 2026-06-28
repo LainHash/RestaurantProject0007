@@ -4,5 +4,5 @@ using Restaurant.Contracts.DTOs.Production.Reservations;
 
 namespace Restaurant.Application.Features.Production.Reservations.Commands.Create
 {
-    public record CreateReservationCommand(CreateReservationRequest Request) : ICommand<DataResult<ReservationResponse>>;
+    public record CreateReservationCommand(CreateReservationRequest CreateReservationRequest) : ICommand<DataResult<ReservationResponse>>;
 }
