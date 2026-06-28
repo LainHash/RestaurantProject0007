@@ -11,7 +11,7 @@ namespace Restaurant.Persistence.Configurations.Misc
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.GuestName).HasMaxLength(150).IsRequired();
-            builder.Property(x => x.GuestEmai).HasMaxLength(150).IsRequired();
+            builder.Property(x => x.GuestEmail).HasMaxLength(150).IsRequired();
             builder.Property(x => x.GuestPhone).HasMaxLength(20).IsRequired();
         }
     }
