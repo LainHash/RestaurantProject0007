@@ -58,44 +58,37 @@ namespace Restaurant.Persistence.Services.Production
         {
             var requestBody = specification.RequestBody;
             var reservation = _mapper.Map<Reservation>(requestBody);
+            reservation.Status = nameof(ReservationStatus.Pending);
 
-            if (!requestBody.RestaurantTableId.HasValue || requestBody.RestaurantTableId == Guid.Empty)
-            {
-                var tablesQuery = _restaurantTableRepository.GetAllAsync(cancellationToken)
+            var tablesQuery = _restaurantTableRepository.GetAllAsync(cancellationToken)
                     .Include(t => t.Area)
                     .Where(t => t.Capacity >= requestBody.NumberOfGuests);
 
-                if (!string.IsNullOrEmpty(requestBody.TableType))
-                {
-                    tablesQuery = tablesQuery.Where(t => t.Area.Type.ToLower() == requestBody.TableType.ToLower());
-                }
-
-                // Check for overlapping reservations (+/- 2 hours)
-                var startTime = requestBody.ReservationTime.AddHours(-2);
-                var endTime = requestBody.ReservationTime.AddHours(2);
-
-                var reservedTableIds = await _reservationRepository.GetAllAsync(cancellationToken)
-                    .Where(r => r.ReservationTime > startTime && r.ReservationTime < endTime && r.Status != nameof(ReservationStatus.Cancelled))
-                    .Select(r => r.RestaurantTableId)
-                    .ToListAsync(cancellationToken);
-
-                var availableTable = await tablesQuery
-                    .Where(t => !reservedTableIds.Contains(t.Id) && (t.Status != nameof(TableStatus.Maintenance) || t.Status != nameof(TableStatus.Reserved)))
-                    .OrderBy(t => t.Capacity)
-                    .FirstOrDefaultAsync(cancellationToken);
-
-                if (availableTable == null)
-                {
-                    return DataResult<ReservationResponse>
-                        .Fail("No available table found for the specified time and guests.", HttpStatusCode.BadRequest);
-                }
-
-                reservation.RestaurantTableId = availableTable.Id;
-            }
-            else
+            if (!string.IsNullOrEmpty(requestBody.TableType))
             {
-                reservation.RestaurantTableId = requestBody.RestaurantTableId.Value;
+                tablesQuery = tablesQuery.Where(t => t.Area.Type.ToLower() == requestBody.TableType.ToLower());
             }
+
+            var startTime = requestBody.ReservationTime.AddHours(-2);
+            var endTime = requestBody.ReservationTime.AddHours(2);
+
+            var reservedTableIds = await _reservationRepository.GetAllAsync(cancellationToken)
+                .Where(r => r.ReservationTime > startTime && r.ReservationTime < endTime && r.Status != nameof(ReservationStatus.Cancelled))
+                .Select(r => r.RestaurantTableId)
+                .ToListAsync(cancellationToken);
+
+            var availableTable = await tablesQuery
+                .Where(t => !reservedTableIds.Contains(t.Id) && (t.Status != nameof(TableStatus.Maintenance) || t.Status != nameof(TableStatus.Reserved)))
+                .OrderBy(t => t.Capacity)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (availableTable == null)
+            {
+                return DataResult<ReservationResponse>
+                    .Fail("No available table found for the specified time and guests.", HttpStatusCode.BadRequest);
+            }
+
+            reservation.RestaurantTableId = availableTable.Id;
 
             if(specification.UserId.HasValue)
             {
@@ -116,5 +109,6 @@ namespace Restaurant.Persistence.Services.Production
             var response = _mapper.Map<ReservationResponse>(reservation);
             return DataResult<ReservationResponse>.Success(response, Messages<Reservation>.AddSuccess, HttpStatusCode.Created);
         }
+
     }
 }

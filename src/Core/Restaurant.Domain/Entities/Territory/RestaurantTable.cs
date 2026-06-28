@@ -1,4 +1,4 @@
-﻿using Restaurant.Domain.Abstraction;
+using Restaurant.Domain.Abstraction;
 using Restaurant.Domain.Entities.Production;
 
 namespace Restaurant.Domain.Entities.Territory
@@ -12,6 +12,6 @@ namespace Restaurant.Domain.Entities.Territory
         public Guid AreaId { get; set; }
 
         public virtual Area Area { get; set; } = null!;
-        public virtual IEnumerable<Reservation> Reservations { get; set; } = Enumerable.Empty<Reservation>();
+        public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }

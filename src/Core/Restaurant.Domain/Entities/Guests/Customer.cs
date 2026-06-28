@@ -11,6 +11,6 @@ namespace Restaurant.Domain.Entities.Guests
 
         public virtual User User { get; set; } = null!;
         public virtual PersonalInformation? PersonalInformation { get; set; }
-        public virtual IEnumerable<Reservation> Reservations { get; set; } = Enumerable.Empty<Reservation>();
+        public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
     }
 }
