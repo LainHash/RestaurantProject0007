@@ -3,7 +3,7 @@ using Restaurant.Application.Messaging;
 using Restaurant.Application.Services.Production;
 using Restaurant.Contracts.DTOs.Production;
 
-namespace Restaurant.Application.Features.Production.Reservations
+namespace Restaurant.Application.Features.Production.Reservations.GetAll
 {
     public class GetAllReservationQueryHandler : IQueryHandler<GetAllReservationQuery, DataResult<IEnumerable<ReservationResponse>>>
     {

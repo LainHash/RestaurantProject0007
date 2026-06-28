@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.Features.Production.Reservations;
+using Microsoft.AspNetCore.Mvc;
+using Restaurant.Application.Features.Production.Reservations.GetAll;
+using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
 using Restaurant.Presentation.Controllers.Abstraction;
 
 namespace Restaurant.Presentation.Controllers.Concrete.Production
@@ -10,6 +11,13 @@ namespace Restaurant.Presentation.Controllers.Concrete.Production
         public async Task<IActionResult> GetAll([FromQuery] GetAllReservationQuery query, CancellationToken cancellationToken)
         {
             var result = await Sender.Send(query, cancellationToken);
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("{weekStart}")]
+        public async Task<IActionResult> GetAllByWeek([FromRoute] DateTime weekStart, CancellationToken cancellationToken)
+        {
+            var result = await Sender.Send(new GetAllReservationByWeekQuery(weekStart), cancellationToken);
             return StatusCode(result.StatusCode, result);
         }
     }

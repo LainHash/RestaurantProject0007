@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
-using Restaurant.Application.Features.Production.Reservations;
+using Restaurant.Application.Features.Production.Reservations.GetAll;
+using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
 using Restaurant.Application.Services.Production;
 using Restaurant.Contracts.DTOs.Production;
 using Restaurant.Domain.Entities.Production;
@@ -19,8 +20,19 @@ namespace Restaurant.Persistence.Services.Production
             _reservationRepository = reservationRepository;
             _mapper = mapper;
         }
-        public async Task<DataResult<IEnumerable<ReservationResponse>>> 
-            GetReservationsAsync(GetAllReservationSpecification specification,CancellationToken cancellationToken)
+
+        public async Task<DataResult<IEnumerable<ReservationResponse>>>
+            GetReservationsAsync(GetAllReservationSpecification specification, CancellationToken cancellationToken)
+        {
+            var reservations = await _reservationRepository.GetAllAsync(specification, cancellationToken);
+
+            var response = _mapper.Map<IEnumerable<ReservationResponse>>(reservations);
+            return DataResult<IEnumerable<ReservationResponse>>
+                .Success(response, Messages<Reservation>.GetAllSuccess, HttpStatusCode.OK);
+        }
+
+        public async Task<DataResult<IEnumerable<ReservationResponse>>>
+            GetReservationByWeekAsync(GetAllReservationByWeekSpecification specification, CancellationToken cancellationToken)
         {
             var reservations = await _reservationRepository.GetAllAsync(specification, cancellationToken);
 
