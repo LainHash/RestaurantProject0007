@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Constants;
-using Restaurant.Application.Features.Production.Reservations.GetAll;
-using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
+using Restaurant.Application.Features.Production.Reservations.Queries.GetAll;
+using Restaurant.Application.Features.Production.Reservations.Queries.GetAllByWeek;
 using Restaurant.Application.Services.Production;
 using Restaurant.Contracts.DTOs.Production.Reservations;
 using Restaurant.Domain.Entities.Production;
@@ -39,6 +39,11 @@ namespace Restaurant.Persistence.Services.Production
             var response = _mapper.Map<IEnumerable<ReservationResponse>>(reservations);
             return DataResult<IEnumerable<ReservationResponse>>
                 .Success(response, Messages<Reservation>.GetAllSuccess, HttpStatusCode.OK);
+        }
+
+        public Task<DataResult<ReservationResponse>> CreateReservationAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

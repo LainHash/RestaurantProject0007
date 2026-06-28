@@ -1,7 +1,7 @@
 ﻿using Restaurant.Domain.Entities.Production;
 using Restaurant.Domain.Specifications;
 
-namespace Restaurant.Application.Features.Production.Reservations.GetAllByWeek
+namespace Restaurant.Application.Features.Production.Reservations.Queries.GetAllByWeek
 {
     public class GetAllReservationByWeekSpecification : BaseSpecification<Reservation>
     {

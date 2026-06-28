@@ -1,6 +1,6 @@
 ﻿using Restaurant.Application.Common.Models.Result;
-using Restaurant.Application.Features.Production.Reservations.GetAll;
-using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
+using Restaurant.Application.Features.Production.Reservations.Queries.GetAll;
+using Restaurant.Application.Features.Production.Reservations.Queries.GetAllByWeek;
 using Restaurant.Contracts.DTOs.Production.Reservations;
 
 namespace Restaurant.Application.Services.Production
@@ -12,5 +12,8 @@ namespace Restaurant.Application.Services.Production
 
         Task<DataResult<IEnumerable<ReservationResponse>>>
             GetReservationByWeekAsync(GetAllReservationByWeekSpecification specification, CancellationToken cancellationToken);
+
+        Task<DataResult<ReservationResponse>>
+            CreateReservationAsync();
     }
 }

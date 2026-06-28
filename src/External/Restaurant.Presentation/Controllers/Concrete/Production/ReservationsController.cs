@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Application.Features.Production.Reservations.GetAll;
-using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
+using Restaurant.Application.Features.Production.Reservations.Queries.GetAll;
+using Restaurant.Application.Features.Production.Reservations.Queries.GetAllByWeek;
 using Restaurant.Presentation.Controllers.Abstraction;
 
 namespace Restaurant.Presentation.Controllers.Concrete.Production

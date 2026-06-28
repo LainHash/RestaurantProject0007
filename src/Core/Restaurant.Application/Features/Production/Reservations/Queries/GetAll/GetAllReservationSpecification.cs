@@ -1,7 +1,7 @@
 ﻿using Restaurant.Domain.Entities.Production;
 using Restaurant.Domain.Specifications;
 
-namespace Restaurant.Application.Features.Production.Reservations.GetAll
+namespace Restaurant.Application.Features.Production.Reservations.Queries.GetAll
 {
     public class GetAllReservationSpecification : BaseSpecification<Reservation>
     {
