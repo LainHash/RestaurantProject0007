@@ -1,4 +1,4 @@
-﻿namespace Restaurant.Contracts.DTOs.Production.Reservations
+namespace Restaurant.Contracts.DTOs.Production.Reservations
 {
     public class CreateReservationRequest
     {
@@ -13,6 +13,7 @@
         public string? GuestEmail { get; set; } = string.Empty;
         public string? GuestPhone { get; set; } = string.Empty;
 
-        public Guid RestaurantTableId { get; set; }
+        public Guid? RestaurantTableId { get; set; }
+        public string? TableType { get; set; }
     }
 }
