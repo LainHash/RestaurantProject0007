@@ -4,7 +4,7 @@ using Restaurant.Application.Constants;
 using Restaurant.Application.Features.Production.Reservations.GetAll;
 using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
 using Restaurant.Application.Services.Production;
-using Restaurant.Contracts.DTOs.Production;
+using Restaurant.Contracts.DTOs.Production.Reservations;
 using Restaurant.Domain.Entities.Production;
 using Restaurant.Domain.Repositories.Production;
 using System.Net;

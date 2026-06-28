@@ -1,7 +1,7 @@
 ﻿using Restaurant.Application.Common.Models.Result;
 using Restaurant.Application.Features.Production.Reservations.GetAll;
 using Restaurant.Application.Features.Production.Reservations.GetAllByWeek;
-using Restaurant.Contracts.DTOs.Production;
+using Restaurant.Contracts.DTOs.Production.Reservations;
 
 namespace Restaurant.Application.Services.Production
 {
